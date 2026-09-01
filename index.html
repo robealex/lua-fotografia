@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lua Fotografía — Bodas y eventos</title>
+<meta name="description" content="Lua Fotografía: retratos de boda y eventos con luz natural, en Buenos Aires y alrededores.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="#top" class="wordmark">Lua<span>·</span>Fotografía</a>
+  <nav>
+    <a href="#estudio">Estudio</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-text">
+      <p class="kicker">Fotografía de bodas y eventos</p>
+      <h1>La luz de esa noche,<br>guardada para siempre.</h1>
+      <p class="hero-copy">Contamos la historia de tu boda tal como pasó: la luz que había, la gente que reía, los gestos que nadie planeó. Basados en Buenos Aires, viajamos a donde estés.</p>
+      <a href="#contacto" class="btn">Contanos tu fecha</a>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <svg viewBox="0 0 400 400" class="crescent">
+        <defs>
+          <mask id="moonmask">
+            <rect width="400" height="400" fill="white"/>
+            <circle cx="250" cy="150" r="145" fill="black"/>
+          </mask>
+        </defs>
+        <circle cx="200" cy="200" r="160" fill="var(--gold)" mask="url(#moonmask)"/>
+      </svg>
+      <div class="hero-frame">
+        <span>foto de referencia · reemplazar</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="phase-divider" aria-hidden="true">
+    <svg viewBox="0 0 800 40" preserveAspectRatio="none"><path d="M0 20 Q 200 0 400 20 T 800 20" /></svg>
+  </div>
+
+  <section id="estudio" class="philosophy">
+    <p class="philosophy-text">
+      Lua nació de una idea simple: las mejores fotos de una boda no se posan, se encuentran. Trabajamos con luz disponible, distancia respetuosa y mucha paciencia, para que el álbum se sienta como recordar la noche y no como mirar un catálogo. Cada pareja recibe una edición pensada para ella — sin filtros de fábrica, sin plantillas.
+    </p>
+    <p class="philosophy-signature">— Lucía, fotógrafa fundadora</p>
+  </section>
+
+  <section id="servicios" class="services">
+    <h2>Servicios</h2>
+
+    <article class="service">
+      <div class="service-media" style="--tint: 222 32% 14%;"></div>
+      <div class="service-body">
+        <h3>Cobertura completa</h3>
+        <p>Desde los preparativos hasta la última canción de la fiesta. Incluye ceremonia, retratos de pareja, familia, y la fiesta entera. Entrega de 500 a 800 fotos editadas.</p>
+        <p class="service-meta">Duración habitual: 10 a 12 horas</p>
+      </div>
+    </article>
+
+    <article class="service reverse">
+      <div class="service-media" style="--tint: 28 42% 45%;"></div>
+      <div class="service-body">
+        <h3>Elopement e íntimas</h3>
+        <p>Para ceremonias chicas, escapadas de dos personas o bodas civiles. Nos movemos con ustedes, sin producción pesada, buscando el lugar y la luz.</p>
+        <p class="service-meta">Duración habitual: 3 a 5 horas</p>
+      </div>
+    </article>
+
+    <article class="service">
+      <div class="service-media" style="--tint: 350 22% 62%;"></div>
+      <div class="service-body">
+        <h3>Sesión de compromiso</h3>
+        <p>Una tarde para conocernos antes del día grande y que lleguen a la boda ya cómodos frente a cámara. Ideal para las invitaciones o la mesa de bienvenida.</p>
+        <p class="service-meta">Duración habitual: 90 minutos</p>
+      </div>
+    </article>
+  </section>
+
+  <div class="phase-divider flip" aria-hidden="true">
+    <svg viewBox="0 0 800 40" preserveAspectRatio="none"><path d="M0 20 Q 200 0 400 20 T 800 20" /></svg>
+  </div>
+
+  <section id="portfolio" class="portfolio">
+    <h2>Portfolio</h2>
+    <p class="section-intro">Una selección de bodas recientes. Reemplazá cada bloque por tus propias fotos.</p>
+    <div class="grid">
+      <div class="ph ph-a">Ceremonia · Palermo</div>
+      <div class="ph ph-b">Anillos</div>
+      <div class="ph ph-c">Fiesta · San Isidro</div>
+      <div class="ph ph-d">Retrato de pareja</div>
+      <div class="ph ph-e">Detalles de mesa</div>
+      <div class="ph ph-f">Primer baile</div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <blockquote>
+      <p>Vimos las fotos y lloramos de nuevo, como si estuviéramos ahí. Lucía captó cosas de la noche que nosotros mismos no vimos.</p>
+      <cite>Martina &amp; Fede</cite>
+    </blockquote>
+    <blockquote>
+      <p>Nada posado, nada forzado. Nuestras familias salen relajadas, reales. Es el álbum que queríamos sin saber que existía.</p>
+      <cite>Sol &amp; Ian</cite>
+    </blockquote>
+  </section>
+
+  <section id="contacto" class="contact">
+    <div class="contact-text">
+      <h2>Contanos sobre tu boda</h2>
+      <p>Escribinos con la fecha, el lugar y cómo se imaginan el día. Respondemos dentro de 48 horas con disponibilidad y presupuesto.</p>
+      <p class="contact-direct">O directo a <a href="mailto:hola@luafotografia.com">hola@luafotografia.com</a></p>
+    </div>
+    <form class="contact-form" onsubmit="return false;">
+      <label>Nombre
+        <input type="text" name="nombre" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" required>
+      </label>
+      <label>Fecha de la boda
+        <input type="date" name="fecha">
+      </label>
+      <label>Contanos un poco
+        <textarea name="mensaje" rows="4"></textarea>
+      </label>
+      <button type="submit" class="btn">Enviar</button>
+      <p class="form-note">Este formulario todavía no envía datos: conectalo a Formspree o similar antes de publicar.</p>
+    </form>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <span>Lua Fotografía</span>
+  <span>Buenos Aires, Argentina</span>
+  <span>© <span id="year"></span></span>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
