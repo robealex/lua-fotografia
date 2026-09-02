@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área de clientes — Lua Fotografía</title>
+<meta name="description" content="Ingresá para ver las fotos de tu boda o evento.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="area-clientes.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="wordmark">Lua<span>·</span>Fotografía</a>
+  <nav>
+    <a href="index.html#estudio">Estudio</a>
+    <a href="index.html#servicios">Servicios</a>
+    <a href="index.html#portfolio">Portfolio</a>
+    <a href="index.html#contacto">Contacto</a>
+    <a href="area-clientes.html" class="nav-active">Área de clientes</a>
+  </nav>
+</header>
+
+<main class="client-area">
+
+  <!-- ===== PANTALLA 1: LOGIN ===== -->
+  <!-- Reemplazar por login real conectado a la base de usuarios cuando esté lista -->
+  <section id="login-screen" class="login-screen">
+    <div class="login-card">
+      <p class="kicker">Área de clientes</p>
+      <h1>Tus fotos, cuando quieras</h1>
+      <p class="login-copy">Ingresá con el email y la contraseña que te dimos al entregar tu galería.</p>
+
+      <form class="login-form" onsubmit="return mostrarGaleria(event)">
+        <label>Email
+          <input type="email" name="email" placeholder="vos@email.com" required>
+        </label>
+        <label>Contraseña
+          <input type="password" name="password" required>
+        </label>
+        <button type="submit" class="btn">Ingresar</button>
+        <p class="form-note">Maqueta de muestra — el login real se conecta cuando activemos Google Drive.</p>
+      </form>
+
+      <p class="login-help">¿No tenés tus datos de acceso? <a href="index.html#contacto">Escribinos</a>.</p>
+    </div>
+  </section>
+
+  <!-- ===== PANTALLA 2: GALERÍA (demo, se muestra tras "ingresar") ===== -->
+  <section id="gallery-screen" class="gallery-screen" hidden>
+    <div class="gallery-head">
+      <div>
+        <p class="kicker">Bienvenida</p>
+        <h1 id="gallery-title">Martina &amp; Fede — 14 de marzo</h1>
+      </div>
+      <button class="btn btn-ghost" onclick="volverAlLogin()">Cerrar sesión</button>
+    </div>
+
+    <p class="gallery-intro">Estas son las carpetas de tu Google Drive. Al conectar la cuenta, cada tarjeta va a mostrar las fotos reales de tu carpeta.</p>
+
+    <div class="folder-grid">
+      <article class="folder-card">
+        <div class="folder-thumb" style="--tint: 222 32% 14%;">📁</div>
+        <h3>Ceremonia</h3>
+        <p>128 fotos</p>
+      </article>
+      <article class="folder-card">
+        <div class="folder-thumb" style="--tint: 28 42% 45%;">📁</div>
+        <h3>Fiesta</h3>
+        <p>241 fotos</p>
+      </article>
+      <article class="folder-card">
+        <div class="folder-thumb" style="--tint: 350 22% 62%;">📁</div>
+        <h3>Retratos de pareja</h3>
+        <p>64 fotos</p>
+      </article>
+      <article class="folder-card">
+        <div class="folder-thumb" style="--tint: 40 30% 40%;">📁</div>
+        <h3>Familia y amigos</h3>
+        <p>97 fotos</p>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <span>Lua Fotografía</span>
+  <span>Buenos Aires, Argentina</span>
+  <span>© <span id="year"></span></span>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// DEMO ONLY: reemplazar por login real (backend + sesión) cuando esté conectado Google Drive.
+function mostrarGaleria(e) {
+  e.preventDefault();
+  document.getElementById('login-screen').hidden = true;
+  document.getElementById('gallery-screen').hidden = false;
+  return false;
+}
+function volverAlLogin() {
+  document.getElementById('gallery-screen').hidden = true;
+  document.getElementById('login-screen').hidden = false;
+}
+</script>
+</body>
+</html>

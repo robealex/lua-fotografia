@@ -1,0 +1,124 @@
+/* Área de clientes — extiende styles.css */
+
+.nav-active { color: var(--gold) !important; }
+
+.client-area { padding: 5vw 6vw 8vw; min-height: 60vh; }
+
+/* Pantalla de login */
+.login-screen {
+  display: flex;
+  justify-content: center;
+  padding: 4vw 0;
+}
+.login-card {
+  max-width: 420px;
+  width: 100%;
+  text-align: left;
+}
+.login-card .kicker { margin-bottom: 10px; }
+.login-card h1 {
+  font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+  margin-bottom: 14px;
+}
+.login-copy {
+  color: var(--ink-soft);
+  max-width: 40ch;
+  margin-bottom: 30px;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--ink);
+  padding: 28px;
+  border-radius: 2px;
+}
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  gap: 6px;
+  color: var(--parchment);
+}
+.login-form input {
+  background: var(--ink-soft);
+  border: 1px solid var(--dust);
+  color: var(--parchment);
+  padding: 10px 12px;
+  border-radius: 2px;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+}
+.login-form .btn { align-self: flex-start; margin-top: 4px; }
+.login-form .form-note { color: var(--dust); font-size: 0.78rem; margin: 0; }
+.login-help {
+  margin-top: 20px;
+  color: var(--dust);
+  font-size: 0.9rem;
+}
+.login-help a { color: var(--gold); text-decoration: none; }
+
+/* Pantalla de galería */
+.gallery-screen { padding: 2vw 0; }
+.gallery-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+.gallery-head h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  white-space: nowrap;
+}
+.btn-ghost:hover { background: var(--ink); color: var(--parchment); }
+
+.gallery-intro {
+  color: var(--dust);
+  max-width: 55ch;
+  margin: 10px 0 4vw;
+}
+
+.folder-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+.folder-card {
+  border: 1px solid var(--dust);
+  border-radius: 2px;
+  padding: 18px;
+  transition: border-color 0.2s ease;
+}
+.folder-card:hover { border-color: var(--gold); }
+.folder-thumb {
+  aspect-ratio: 4 / 3;
+  background: hsl(var(--tint));
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 14px;
+}
+.folder-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+.folder-card p {
+  color: var(--dust);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .folder-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-head { flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .folder-grid { grid-template-columns: 1fr; }
+  .login-form { padding: 20px; }
+}
