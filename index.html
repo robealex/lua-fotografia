@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lua Fotografía — Bodas y eventos</title>
-<meta name="description" content="Lua Fotografía: retratos de boda y eventos con luz natural, en Buenos Aires y alrededores.">
+<meta name="description" content="Lua Fotografía: retratos de boda y eventos con luz natural, en Ensenada, Baja California y alrededores.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -38,7 +38,7 @@
     <div class="hero-text">
       <p class="kicker">Fotografía de bodas y eventos</p>
       <h1>La luz de esa noche,<br>guardada para siempre.</h1>
-      <p class="hero-copy">Contamos la historia de tu boda tal como pasó: la luz que había, la gente que reía, los gestos que nadie planeó. Basados en Buenos Aires, viajamos a donde estés.</p>
+      <p class="hero-copy">Contamos la historia de tu boda tal como pasó: la luz que había, la gente que reía, los gestos que nadie planeó. Basados en Ensenada, Baja California, viajamos a donde estés.</p>
       <a href="#contacto" class="btn">Contanos tu fecha</a>
     </div>
     <div class="hero-visual" aria-hidden="true">
@@ -107,9 +107,9 @@
     <h2>Portfolio</h2>
     <p class="section-intro">Una selección de bodas recientes. Reemplazá cada bloque por tus propias fotos.</p>
     <div class="grid">
-      <div class="ph ph-a" style="background-image: url('images/foto-ceremonia.jpg'), linear-gradient(155deg, var(--linen) 0%, var(--cream) 100%); background-size: cover; background-position: center;">Ceremonia · Palermo</div>
+      <div class="ph ph-a" style="background-image: url('images/foto-ceremonia.jpg'), linear-gradient(155deg, var(--linen) 0%, var(--cream) 100%); background-size: cover; background-position: center;">Ceremonia · Ensenada</div>
       <div class="ph ph-b" style="background-image: url('images/foto-anillos.jpg'), linear-gradient(155deg, #e3cfa8, #cdb185); background-size: cover; background-position: center;">Anillos</div>
-      <div class="ph ph-c" style="background-image: url('images/foto-fiesta.jpg'), linear-gradient(155deg, var(--linen) 0%, var(--cream) 100%); background-size: cover; background-position: center;">Fiesta · San Isidro</div>
+      <div class="ph ph-c" style="background-image: url('images/foto-fiesta.jpg'), linear-gradient(155deg, var(--linen) 0%, var(--cream) 100%); background-size: cover; background-position: center;">Fiesta · Valle de Guadalupe</div>
       <div class="ph ph-d" style="background-image: url('images/foto-pareja.jpg'), linear-gradient(155deg, #e8d2c9, #d8b8ab); background-size: cover; background-position: center;">Retrato de pareja</div>
       <div class="ph ph-e" style="background-image: url('images/foto-detalles.jpg'), linear-gradient(155deg, var(--linen) 0%, var(--cream) 100%); background-size: cover; background-position: center;">Detalles de mesa</div>
       <div class="ph ph-f" style="background-image: url('images/foto-baile.jpg'), linear-gradient(120deg, var(--linen) 0%, #C9B78E 100%); background-size: cover; background-position: center;">Primer baile</div>
@@ -129,8 +129,8 @@
 
   <section id="contacto" class="contact">
     <div class="contact-text">
-      <h2>Contanos sobre tu boda</h2>
-      <p>Escribinos con la fecha, el lugar y cómo se imaginan el día. Respondemos dentro de 48 horas con disponibilidad y presupuesto.</p>
+      <h2>Contanos sobre tu evento</h2>
+      <p>Escribinos con el tipo de evento, el lugar y cómo se lo imaginan. Respondemos dentro de 48 horas con disponibilidad y presupuesto.</p>
       <p class="contact-direct">O directo a <a href="mailto:hola@luafotografia.com">hola@luafotografia.com</a></p>
     </div>
     <form class="contact-form" onsubmit="return false;">
@@ -140,11 +140,18 @@
       <label>Email
         <input type="email" name="email" required>
       </label>
-      <label>Fecha de la boda
-        <input type="date" name="fecha">
+      <label>Tipo de evento
+        <select name="tipo_evento" required>
+          <option value="" selected disabled>Elegí una opción</option>
+          <option value="boda">Boda</option>
+          <option value="xv">XV años</option>
+          <option value="evento">Evento</option>
+          <option value="sesion_pareja">Sesión de pareja</option>
+          <option value="otro">Otro</option>
+        </select>
       </label>
       <label>Contanos un poco
-        <textarea name="mensaje" rows="4"></textarea>
+        <textarea name="mensaje" rows="4" placeholder="Fecha tentativa, lugar, cómo se lo imaginan..."></textarea>
       </label>
       <button type="submit" class="btn">Enviar</button>
       <p class="form-note">Este formulario todavía no envía datos: conectalo a Formspree o similar antes de publicar.</p>
@@ -155,7 +162,7 @@
 
 <footer class="site-footer">
   <span>Lua Fotografía</span>
-  <span>Buenos Aires, Argentina</span>
+  <span>Ensenada, Baja California, México</span>
   <span>© <span id="year"></span></span>
 </footer>
 

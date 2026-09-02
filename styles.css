@@ -253,7 +253,7 @@ body.no-scroll { overflow: hidden; }
 .contact-direct a { color: var(--gold); }
 .contact-form { display: flex; flex-direction: column; gap: 14px; }
 .contact-form label { display: flex; flex-direction: column; font-size: 0.9rem; gap: 6px; color: var(--ink); }
-.contact-form input, .contact-form textarea {
+.contact-form input, .contact-form textarea, .contact-form select {
   background: var(--cream);
   border: 1px solid var(--dust);
   color: var(--ink);
