@@ -8,12 +8,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <header class="site-header">
-  <a href="#top" class="wordmark">Lua<span>·</span>Fotografía</a>
+  <a href="#top" class="wordmark"><img src="images/logo.png" alt="Lua Fotografía" class="logo-img"></a>
   <nav>
     <a href="#estudio">Estudio</a>
     <a href="#servicios">Servicios</a>
@@ -42,8 +46,8 @@
         </defs>
         <circle cx="200" cy="200" r="160" fill="var(--gold)" mask="url(#moonmask)"/>
       </svg>
-      <div class="hero-frame">
-        <span>foto de referencia · reemplazar</span>
+      <div class="hero-frame" style="background-image: url('images/hero.jpg'), linear-gradient(160deg, var(--ink) 0%, var(--ink-soft) 100%); background-size: cover; background-position: center;">
+        <span>foto de referencia · subí images/hero.jpg</span>
       </div>
     </div>
   </section>
@@ -63,7 +67,7 @@
     <h2>Servicios</h2>
 
     <article class="service">
-      <div class="service-media" style="--tint: 222 32% 14%;"></div>
+      <div class="service-media" style="--tint: 222 32% 14%; background-image: url('images/foto-cobertura.jpg'); background-size: cover; background-position: center;"></div>
       <div class="service-body">
         <h3>Cobertura completa</h3>
         <p>Desde los preparativos hasta la última canción de la fiesta. Incluye ceremonia, retratos de pareja, familia, y la fiesta entera. Entrega de 500 a 800 fotos editadas.</p>
@@ -72,7 +76,7 @@
     </article>
 
     <article class="service reverse">
-      <div class="service-media" style="--tint: 28 42% 45%;"></div>
+      <div class="service-media" style="--tint: 28 42% 45%; background-image: url('images/foto-elopement.jpg'); background-size: cover; background-position: center;"></div>
       <div class="service-body">
         <h3>Grandiosas e íntimas</h3>
         <p>Para ceremonias chicas, escapadas de dos personas o bodas civiles. Nos movemos con ustedes, sin producción pesada, buscando el lugar y la luz.</p>
@@ -81,7 +85,7 @@
     </article>
 
     <article class="service">
-      <div class="service-media" style="--tint: 350 22% 62%;"></div>
+      <div class="service-media" style="--tint: 350 22% 62%; background-image: url('images/foto-compromiso.jpg'); background-size: cover; background-position: center;"></div>
       <div class="service-body">
         <h3>Sesión de compromiso</h3>
         <p>Una tarde para conocernos antes del día grande y que lleguen a la boda ya cómodos frente a cámara. Ideal para las invitaciones o la mesa de bienvenida.</p>
@@ -98,12 +102,12 @@
     <h2>Portfolio</h2>
     <p class="section-intro">Una selección de bodas recientes. Reemplazá cada bloque por tus propias fotos.</p>
     <div class="grid">
-      <div class="ph ph-a">Ceremonia · Palermo</div>
-      <div class="ph ph-b">Anillos</div>
-      <div class="ph ph-c">Fiesta · San Isidro</div>
-      <div class="ph ph-d">Retrato de pareja</div>
-      <div class="ph ph-e">Detalles de mesa</div>
-      <div class="ph ph-f">Primer baile</div>
+      <div class="ph ph-a" style="background-image: url('images/foto-ceremonia.jpg'), linear-gradient(155deg, var(--ink) 0%, var(--ink-soft) 100%); background-size: cover; background-position: center;">Ceremonia · Palermo</div>
+      <div class="ph ph-b" style="background-image: url('images/foto-anillos.jpg'), linear-gradient(155deg, #6b5b47, #8a7458); background-size: cover; background-position: center;">Anillos</div>
+      <div class="ph ph-c" style="background-image: url('images/foto-fiesta.jpg'), linear-gradient(155deg, var(--ink) 0%, var(--ink-soft) 100%); background-size: cover; background-position: center;">Fiesta · San Isidro</div>
+      <div class="ph ph-d" style="background-image: url('images/foto-pareja.jpg'), linear-gradient(155deg, #7a5a55, #9c7a6f); background-size: cover; background-position: center;">Retrato de pareja</div>
+      <div class="ph ph-e" style="background-image: url('images/foto-detalles.jpg'), linear-gradient(155deg, var(--ink) 0%, var(--ink-soft) 100%); background-size: cover; background-position: center;">Detalles de mesa</div>
+      <div class="ph ph-f" style="background-image: url('images/foto-baile.jpg'), linear-gradient(120deg, var(--ink) 0%, #4a3f30 100%); background-size: cover; background-position: center;">Primer baile</div>
     </div>
   </section>
 

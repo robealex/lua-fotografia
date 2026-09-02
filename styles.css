@@ -38,8 +38,11 @@ a { color: inherit; }
   font-size: 1.3rem;
   text-decoration: none;
   letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
 }
 .wordmark span { color: var(--gold); padding: 0 2px; }
+.logo-img { height: 54px; width: auto; display: block; }
 .site-header nav a {
   text-decoration: none;
   margin-left: 28px;
