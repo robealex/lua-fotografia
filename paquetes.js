@@ -1,16 +1,12 @@
 // ==========================================================================
 // Arma tu paquete — Lua Fotografía
-//
-// ⚠️ PRECIOS A CONFIRMAR (marcados con "EDITAR"): no vinieron en las tarifas
-// que compartiste, así que puse valores de referencia. Cambialos por los
-// reales antes de publicar, buscando "EDITAR" en este archivo.
 // ==========================================================================
 
 const PRECIOS = {
-  horaFoto: 500,   // EDITAR: precio por hora extra de cobertura fotográfica el día del evento
-  horaVideo: 500,  // EDITAR: precio por hora extra de cobertura de video el día del evento
-  usb: 150,        // EDITAR: precio por USB físico adicional
-  fotoLibro: 2500, // EDITAR: precio del foto libro (vertical, carta, 20 páginas) fuera del Paquete 2
+  horaFoto: 800,   // confirmado
+  horaVideo: 1000, // confirmado
+  usb: 250,        // confirmado
+  fotoLibro: 700,  // confirmado
   slideshow: 300,  // confirmado en "Servicios Extras"
   prebodaExterior: 600, // confirmado en "Servicios Extras"
   prebodaEstudio: 800,  // confirmado en "Servicios Extras"
