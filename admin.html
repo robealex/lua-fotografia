@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Lua Fotografía</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+<!-- ===== LOGIN ===== -->
+<!-- DEMO: cualquier email/contraseña entra. Reemplazar por login real cuando esté el backend. -->
+<section id="admin-login" class="admin-login-screen">
+  <div class="admin-login-card">
+    <img src="images/logo.png" alt="Lua Fotografía" class="admin-logo">
+    <p class="kicker">Panel privado</p>
+    <h1>Acceso de administración</h1>
+    <form onsubmit="return LuaAdmin.login(event)">
+      <label>Email
+        <input type="email" id="admin-email" required>
+      </label>
+      <label>Contraseña
+        <input type="password" id="admin-password" required>
+      </label>
+      <button type="submit" class="btn">Entrar</button>
+      <p class="form-note">Maqueta de muestra: cualquier dato entra. El acceso real se protege cuando conectemos el backend.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ===== PANEL ===== -->
+<div id="admin-panel" class="admin-panel" hidden>
+
+  <header class="admin-header">
+    <a href="index.html" class="wordmark"><img src="images/logo.png" alt="Lua Fotografía" class="logo-img"></a>
+    <div class="admin-header-right">
+      <span class="admin-badge">Panel privado — no indexado</span>
+      <button type="button" class="btn btn-outline" onclick="LuaAdmin.logout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <nav class="admin-tabs">
+    <button type="button" class="admin-tab is-active" data-tab="usuarios">Usuarios y carpetas</button>
+    <button type="button" class="admin-tab" data-tab="recibos">Generar recibo</button>
+    <button type="button" class="admin-tab" data-tab="historial">Historial de recibos</button>
+  </nav>
+
+  <!-- ---- TAB: USUARIOS ---- -->
+  <section class="admin-tab-panel is-active" data-tab-panel="usuarios">
+    <div class="admin-section-head">
+      <div>
+        <h2>Usuarios del área de clientes</h2>
+        <p class="section-intro">Cada cliente ve solo la carpeta de Google Drive que le asignes acá. Esto es una maqueta: los datos se guardan en este navegador hasta que conectemos la base real.</p>
+      </div>
+      <button type="button" class="btn" onclick="LuaAdmin.abrirFormUsuario()">+ Agregar usuario</button>
+    </div>
+
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Evento</th>
+          <th>Carpeta de Drive</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="admin-users-body"></tbody>
+    </table>
+    <p class="admin-empty" id="admin-users-empty">Todavía no agregaste ningún usuario.</p>
+  </section>
+
+  <!-- ---- TAB: RECIBOS ---- -->
+  <section class="admin-tab-panel" data-tab-panel="recibos">
+    <h2>Generar recibo</h2>
+    <p class="section-intro">Armá el recibo eligiendo del catálogo o agregando un concepto libre, y generá la vista lista para imprimir o guardar como PDF.</p>
+
+    <div class="receipt-grid">
+      <div class="receipt-form">
+
+        <div class="admin-card">
+          <h3>Datos del recibo</h3>
+          <label>Cliente
+            <select id="recibo-cliente">
+              <option value="">— Sin cuenta / cliente manual —</option>
+            </select>
+          </label>
+          <label>Nombre del cliente
+            <input type="text" id="recibo-cliente-nombre" placeholder="Se completa solo si elegís un usuario">
+          </label>
+          <label>Evento
+            <input type="text" id="recibo-evento" placeholder="Ej. Boda — 14 de marzo 2026">
+          </label>
+          <label>Fecha del recibo
+            <input type="date" id="recibo-fecha">
+          </label>
+        </div>
+
+        <div class="admin-card">
+          <h3>Agregar del catálogo</h3>
+          <div class="quick-add-row">
+            <select id="quick-add-tipo">
+              <option value="horaFoto">Hora de cobertura fotográfica</option>
+              <option value="horaVideo">Hora de cobertura de video</option>
+              <option value="usb">USB</option>
+              <option value="fotoLibro">Foto libro</option>
+              <option value="slideshow">Slideshow musicalizado</option>
+              <option value="prebodaExterior">Sesión pre-boda exterior</option>
+              <option value="prebodaEstudio">Sesión pre-boda estudio</option>
+              <option value="paquete1">Paquete 1 — Boda</option>
+              <option value="paquete2">Paquete 2 — Boda</option>
+              <option value="paquete3">Paquete 3 — Boda</option>
+              <option value="video">Servicio de video</option>
+              <option value="impresion">Impresión (elegir tipo y tamaño)</option>
+            </select>
+            <select id="quick-add-imp-tipo" class="quick-add-imp" hidden>
+              <option value="papel">Papel fotográfico</option>
+              <option value="mdf12">MDF 1/2"</option>
+              <option value="mdf18">MDF 1/8"</option>
+            </select>
+            <select id="quick-add-imp-tamano" class="quick-add-imp" hidden></select>
+            <input type="number" id="quick-add-cantidad" min="1" value="1">
+            <button type="button" class="btn btn-outline" onclick="LuaAdmin.agregarDelCatalogo()">Agregar</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Concepto libre</h3>
+          <div class="quick-add-row">
+            <input type="text" id="libre-descripcion" placeholder="Descripción">
+            <input type="number" id="libre-cantidad" min="1" value="1" placeholder="Cant.">
+            <input type="number" id="libre-precio" min="0" step="0.01" placeholder="Precio unitario">
+            <button type="button" class="btn btn-outline" onclick="LuaAdmin.agregarLibre()">Agregar</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Conceptos del recibo</h3>
+          <ul class="receipt-items" id="recibo-items">
+            <li class="admin-empty" id="recibo-items-empty">Todavía no agregaste conceptos.</li>
+          </ul>
+          <div class="receipt-total-row">
+            <span>Total</span>
+            <strong id="recibo-total">$0</strong>
+          </div>
+        </div>
+
+        <button type="button" class="btn" onclick="LuaAdmin.generarRecibo()">Generar recibo</button>
+      </div>
+
+      <!-- Vista previa / impresión -->
+      <div id="recibo-preview" class="receipt-preview" hidden>
+        <div id="recibo-print-area" class="receipt-print-area">
+          <div class="receipt-print-head">
+            <img src="images/logo.png" alt="Lua Fotografía">
+            <div>
+              <p class="receipt-brand">Lua Fotografía</p>
+              <p>Ensenada, Baja California, México</p>
+              <p>hola@luafotografia.com</p>
+            </div>
+          </div>
+          <h2>Recibo <span id="print-numero"></span></h2>
+          <div class="receipt-print-meta">
+            <p><strong>Cliente:</strong> <span id="print-cliente"></span></p>
+            <p><strong>Evento:</strong> <span id="print-evento"></span></p>
+            <p><strong>Fecha:</strong> <span id="print-fecha"></span></p>
+          </div>
+          <table class="receipt-print-table">
+            <thead><tr><th>Concepto</th><th>Cant.</th><th>Precio</th><th>Subtotal</th></tr></thead>
+            <tbody id="print-items"></tbody>
+          </table>
+          <div class="receipt-print-total">
+            <span>Total</span>
+            <strong id="print-total"></strong>
+          </div>
+        </div>
+        <div class="receipt-preview-actions">
+          <button type="button" class="btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+          <button type="button" class="btn btn-outline" onclick="LuaAdmin.nuevoRecibo()">Empezar un recibo nuevo</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---- TAB: HISTORIAL ---- -->
+  <section class="admin-tab-panel" data-tab-panel="historial">
+    <h2>Historial de recibos</h2>
+    <p class="section-intro">Guardado en este navegador. Se va a migrar a la base de datos real cuando conectemos el backend.</p>
+    <table class="admin-table">
+      <thead>
+        <tr><th>N°</th><th>Cliente</th><th>Evento</th><th>Fecha</th><th>Total</th><th></th></tr>
+      </thead>
+      <tbody id="admin-recibos-body"></tbody>
+    </table>
+    <p class="admin-empty" id="admin-recibos-empty">Todavía no generaste ningún recibo.</p>
+  </section>
+
+</div>
+
+<!-- ===== MODAL: FORM USUARIO ===== -->
+<div id="admin-modal" class="admin-modal" hidden>
+  <div class="admin-modal-card">
+    <button type="button" class="admin-modal-close" onclick="LuaAdmin.cerrarFormUsuario()">✕</button>
+    <h3 id="admin-modal-title">Agregar usuario</h3>
+    <form onsubmit="return LuaAdmin.guardarUsuario(event)">
+      <input type="hidden" id="usuario-id">
+      <label>Nombre completo
+        <input type="text" id="usuario-nombre" required>
+      </label>
+      <label>Email (login)
+        <input type="email" id="usuario-email" required>
+      </label>
+      <label>Contraseña temporal
+        <input type="text" id="usuario-password" required>
+      </label>
+      <label>Tipo de evento
+        <select id="usuario-evento">
+          <option value="Boda">Boda</option>
+          <option value="XV años">XV años</option>
+          <option value="Evento">Evento</option>
+          <option value="Sesión de pareja">Sesión de pareja</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </label>
+      <label>Carpeta de Google Drive asignada
+        <input type="text" id="usuario-carpeta" placeholder="Nombre o link de la carpeta compartida" required>
+      </label>
+      <label>Notas
+        <textarea id="usuario-notas" rows="2"></textarea>
+      </label>
+      <div class="admin-modal-actions">
+        <button type="submit" class="btn">Guardar</button>
+        <button type="button" class="btn btn-outline" onclick="LuaAdmin.cerrarFormUsuario()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="catalogo.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

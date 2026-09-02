@@ -1,46 +1,11 @@
 // ==========================================================================
 // Arma tu paquete — Lua Fotografía
+// Usa el catálogo compartido de catalogo.js (LUA_PRECIOS / LUA_IMPRESIONES)
 // ==========================================================================
 
-const PRECIOS = {
-  horaFoto: 800,   // confirmado
-  horaVideo: 1000, // confirmado
-  usb: 250,        // confirmado
-  fotoLibro: 700,  // confirmado
-  slideshow: 300,  // confirmado en "Servicios Extras"
-  prebodaExterior: 600, // confirmado en "Servicios Extras"
-  prebodaEstudio: 800,  // confirmado en "Servicios Extras"
-};
-
-// Tablas de impresión, tomadas tal cual de las listas de precios
-const IMPRESIONES = {
-  papel: {
-    label: "Impresión en papel fotográfico",
-    tamanos: {
-      '4x6"': 10, '5x7"': 15, '6x8"': 15, '8x10"': 60, '8x12"': 72,
-      '11x14"': 115, '12x18"': 160, '16x20"': 370, '16x24"': 450,
-      '20x24"': 550, '20x30"': 690, '24x30"': 820, '24x36"': 1000, '30x40"': 1400,
-    },
-  },
-  mdf12: {
-    label: 'Impresión + laminado + montado en MDF 1/2"',
-    tamanos: {
-      '4x6"': 50, '5x7"': 70, '6x8"': 100, '8x10"': 200, '11x14"': 380,
-      '12x18"': 530, '16x20"': 960, '20x24"': 1450, '20x30"': 1800,
-      '24x30"': 2600, '30x40"': 3600,
-    },
-  },
-  mdf18: {
-    label: 'Impresión + laminado + montado en MDF 1/8"',
-    tamanos: {
-      '4x6"': 35, '5x7"': 50, '6x8"': 75, '8x10"': 160, '11x14"': 330,
-      '12x18"': 460, '16x20"': 800, '20x24"': 1200, '20x30"': 1500,
-      '24x30"': 2160, '30x40"': 3000,
-    },
-  },
-};
-
-const fmt = (n) => '$' + n.toLocaleString('es-MX');
+const PRECIOS = window.LUA_PRECIOS;
+const IMPRESIONES = window.LUA_IMPRESIONES;
+const fmt = window.LUA_FMT;
 
 // ----- Estado -----
 const state = {
