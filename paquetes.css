@@ -191,3 +191,12 @@
   .print-form { grid-template-columns: 1fr 1fr; }
   .print-add-btn { grid-column: span 2; }
 }
+
+@media (max-width: 480px) {
+  .paquetes-main { padding: 0 5vw 10vw; }
+  .print-form { grid-template-columns: 1fr; }
+  .print-add-btn { grid-column: span 1; width: 100%; }
+  .builder-summary { padding: 20px; }
+  .summary-total strong { font-size: 1.3rem; }
+  .pk-card, .builder-block { padding: 20px 18px; }
+}

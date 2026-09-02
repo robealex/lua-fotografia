@@ -19,7 +19,10 @@
 
 <header class="site-header">
   <a href="index.html" class="wordmark"><img src="images/logo.png" alt="Lua Fotografía" class="logo-img"></a>
-  <nav>
+  <button type="button" class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <nav id="site-nav">
     <a href="index.html#estudio">Estudio</a>
     <a href="index.html#servicios">Servicios</a>
     <a href="index.html#portfolio">Portfolio</a>
@@ -27,6 +30,7 @@
     <a href="index.html#contacto">Contacto</a>
     <a href="area-clientes.html">Área de clientes</a>
   </nav>
+  <div class="nav-backdrop"></div>
 </header>
 
 <main class="paquetes-main">
@@ -265,6 +269,7 @@
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 </script>
+<script src="menu.js"></script>
 <script src="paquetes.js"></script>
 </body>
 </html>

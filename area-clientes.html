@@ -8,14 +8,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="area-clientes.css">
 </head>
 <body>
 
 <header class="site-header">
-  <a href="index.html" class="wordmark">Lua<span>·</span>Fotografía</a>
-  <nav>
+  <a href="index.html" class="wordmark"><img src="images/logo.png" alt="Lua Fotografía" class="logo-img"></a>
+  <button type="button" class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <nav id="site-nav">
     <a href="index.html#estudio">Estudio</a>
     <a href="index.html#servicios">Servicios</a>
     <a href="index.html#portfolio">Portfolio</a>
@@ -23,6 +30,7 @@
     <a href="index.html#contacto">Contacto</a>
     <a href="area-clientes.html" class="nav-active">Área de clientes</a>
   </nav>
+  <div class="nav-backdrop"></div>
 </header>
 
 <main class="client-area">
@@ -109,5 +117,6 @@ function volverAlLogin() {
   document.getElementById('login-screen').hidden = false;
 }
 </script>
+<script src="menu.js"></script>
 </body>
 </html>

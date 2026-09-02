@@ -18,7 +18,10 @@
 
 <header class="site-header">
   <a href="#top" class="wordmark"><img src="images/logo.png" alt="Lua Fotografía" class="logo-img"></a>
-  <nav>
+  <button type="button" class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <nav id="site-nav">
     <a href="#estudio">Estudio</a>
     <a href="#servicios">Servicios</a>
     <a href="#portfolio">Portfolio</a>
@@ -26,6 +29,7 @@
     <a href="#contacto">Contacto</a>
     <a href="area-clientes.html">Área de clientes</a>
   </nav>
+  <div class="nav-backdrop"></div>
 </header>
 
 <main id="top">
@@ -156,5 +160,6 @@
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="menu.js"></script>
 </body>
 </html>
