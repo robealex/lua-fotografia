@@ -11,6 +11,7 @@ Faltan por subir:
 - `foto-cobertura.jpg` — servicio "Cobertura completa"
 - `foto-elopement.jpg` — servicio "Elopement e íntimas"
 - `foto-compromiso.jpg` — servicio "Sesión de compromiso"
+- `foto-invitacion.jpg` — servicio "Invitación web para tu boda"
 - `foto-ceremonia.jpg` — portfolio: Ceremonia
 - `foto-anillos.jpg` — portfolio: Anillos
 - `foto-fiesta.jpg` — portfolio: Fiesta

@@ -227,6 +227,33 @@
   .admin-tab-panel { padding: 6vw 5vw 12vw; }
 }
 
+/* ---- Invitaciones ---- */
+.invite-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 30px; align-items: start; }
+.invite-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+.invite-preview {
+  position: sticky;
+  top: 20px;
+  background: var(--cream);
+  border: 1px solid var(--dust);
+  border-radius: 2px;
+  padding: 14px;
+}
+.invite-preview-label { font-size: 0.8rem; color: var(--dust); margin: 0 0 10px; }
+#invite-iframe {
+  width: 100%;
+  height: 70vh;
+  border: 1px solid var(--dust);
+  border-radius: 2px;
+  background: #fff;
+}
+.invite-history { margin-top: 34px; }
+
+@media (max-width: 900px) {
+  .invite-grid { grid-template-columns: 1fr; }
+  .invite-preview { position: static; }
+  #invite-iframe { height: 60vh; }
+}
+
 /* ---- Impresión ---- */
 @media print {
   body * { visibility: hidden; }

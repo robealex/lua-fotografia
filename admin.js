@@ -54,6 +54,7 @@
     renderUsuarios();
     renderSelectClientes();
     renderRecibos();
+    renderInvitaciones();
     const fechaInput = document.getElementById('recibo-fecha');
     if (fechaInput && !fechaInput.value) fechaInput.value = new Date().toISOString().slice(0, 10);
   }
@@ -65,6 +66,7 @@
       document.querySelectorAll('.admin-tab-panel').forEach((p) => p.classList.remove('is-active'));
       btn.classList.add('is-active');
       document.querySelector(`[data-tab-panel="${btn.dataset.tab}"]`).classList.add('is-active');
+      if (btn.dataset.tab === 'invitaciones') actualizarPreviewInvitacion();
     });
   });
 
@@ -360,6 +362,122 @@
       }));
   }
 
+  // ===================== INVITACIONES WEB =====================
+  const STORAGE_INVITACIONES = 'lua_admin_invitaciones';
+  let invitaciones = leer(STORAGE_INVITACIONES, []);
+
+  function leerFormInvitacion() {
+    return {
+      novio1: document.getElementById('inv-novio1').value.trim() || 'Novia',
+      novio2: document.getElementById('inv-novio2').value.trim() || 'Novio',
+      acento: document.getElementById('inv-acento').value,
+      fecha: document.getElementById('inv-fecha').value,
+      horaCeremonia: document.getElementById('inv-hora-ceremonia').value,
+      lugarCeremonia: document.getElementById('inv-lugar-ceremonia').value.trim(),
+      direccionCeremonia: document.getElementById('inv-direccion-ceremonia').value.trim(),
+      mapaCeremonia: document.getElementById('inv-mapa-ceremonia').value.trim(),
+      horaRecepcion: document.getElementById('inv-hora-recepcion').value,
+      lugarRecepcion: document.getElementById('inv-lugar-recepcion').value.trim(),
+      direccionRecepcion: document.getElementById('inv-direccion-recepcion').value.trim(),
+      mapaRecepcion: document.getElementById('inv-mapa-recepcion').value.trim(),
+      historia: document.getElementById('inv-historia').value.trim(),
+      vestimenta: document.getElementById('inv-vestimenta').value.trim(),
+      regalos: document.getElementById('inv-regalos').value.trim(),
+      fechaLimiteRSVP: document.getElementById('inv-fecha-limite').value.trim(),
+      emailRSVP: document.getElementById('inv-email-rsvp').value.trim(),
+    };
+  }
+
+  function actualizarPreviewInvitacion() {
+    const datos = leerFormInvitacion();
+    const html = window.LUA_generarInvitacionHTML(datos);
+    document.getElementById('invite-iframe').srcdoc = html;
+    return html;
+  }
+
+  function descargarInvitacion() {
+    const datos = leerFormInvitacion();
+    const html = window.LUA_generarInvitacionHTML(datos);
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const slug = (datos.novio1 + '-' + datos.novio2).toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    a.href = url;
+    a.download = `invitacion-${slug || 'boda'}.html`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function guardarInvitacion() {
+    const datos = leerFormInvitacion();
+    const registro = { id: 'i' + Date.now(), datos, guardadoEl: new Date().toISOString().slice(0, 10) };
+    invitaciones.unshift(registro);
+    guardar(STORAGE_INVITACIONES, invitaciones);
+    renderInvitaciones();
+  }
+
+  function cargarInvitacion(id) {
+    const r = invitaciones.find((x) => x.id === id);
+    if (!r) return;
+    const d = r.datos;
+    document.getElementById('inv-novio1').value = d.novio1 || '';
+    document.getElementById('inv-novio2').value = d.novio2 || '';
+    document.getElementById('inv-acento').value = d.acento || 'dorado';
+    document.getElementById('inv-fecha').value = d.fecha || '';
+    document.getElementById('inv-hora-ceremonia').value = d.horaCeremonia || '';
+    document.getElementById('inv-lugar-ceremonia').value = d.lugarCeremonia || '';
+    document.getElementById('inv-direccion-ceremonia').value = d.direccionCeremonia || '';
+    document.getElementById('inv-mapa-ceremonia').value = d.mapaCeremonia || '';
+    document.getElementById('inv-hora-recepcion').value = d.horaRecepcion || '';
+    document.getElementById('inv-lugar-recepcion').value = d.lugarRecepcion || '';
+    document.getElementById('inv-direccion-recepcion').value = d.direccionRecepcion || '';
+    document.getElementById('inv-mapa-recepcion').value = d.mapaRecepcion || '';
+    document.getElementById('inv-historia').value = d.historia || '';
+    document.getElementById('inv-vestimenta').value = d.vestimenta || '';
+    document.getElementById('inv-regalos').value = d.regalos || '';
+    document.getElementById('inv-fecha-limite').value = d.fechaLimiteRSVP || '';
+    document.getElementById('inv-email-rsvp').value = d.emailRSVP || '';
+    actualizarPreviewInvitacion();
+    document.querySelector('[data-tab="invitaciones"]').click();
+  }
+
+  function eliminarInvitacion(id) {
+    if (!confirm('¿Eliminar esta invitación guardada?')) return;
+    invitaciones = invitaciones.filter((x) => x.id !== id);
+    guardar(STORAGE_INVITACIONES, invitaciones);
+    renderInvitaciones();
+  }
+
+  function renderInvitaciones() {
+    const body = document.getElementById('admin-invitaciones-body');
+    const empty = document.getElementById('admin-invitaciones-empty');
+    body.innerHTML = '';
+    if (invitaciones.length === 0) {
+      empty.style.display = '';
+      return;
+    }
+    empty.style.display = 'none';
+    invitaciones.forEach((r) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(r.datos.novio1)} &amp; ${escapeHtml(r.datos.novio2)}</td>
+        <td>${escapeHtml(r.datos.fecha || '—')}</td>
+        <td class="row-actions">
+          <button data-cargar="${r.id}">Cargar</button>
+          <button data-borrar="${r.id}">Eliminar</button>
+        </td>`;
+      body.appendChild(tr);
+    });
+    body.querySelectorAll('[data-cargar]').forEach((b) =>
+      b.addEventListener('click', () => cargarInvitacion(b.dataset.cargar)));
+    body.querySelectorAll('[data-borrar]').forEach((b) =>
+      b.addEventListener('click', () => eliminarInvitacion(b.dataset.borrar)));
+  }
+
   // ===================== Helpers =====================
   function escapeHtml(str) {
     const div = document.createElement('div');
@@ -374,5 +492,6 @@
     login, logout,
     abrirFormUsuario, cerrarFormUsuario, guardarUsuario, eliminarUsuario,
     agregarDelCatalogo, agregarLibre, generarRecibo, nuevoRecibo,
+    actualizarPreviewInvitacion, descargarInvitacion, guardarInvitacion,
   };
 })();

@@ -49,6 +49,7 @@
     <button type="button" class="admin-tab is-active" data-tab="usuarios">Usuarios y carpetas</button>
     <button type="button" class="admin-tab" data-tab="recibos">Generar recibo</button>
     <button type="button" class="admin-tab" data-tab="historial">Historial de recibos</button>
+    <button type="button" class="admin-tab" data-tab="invitaciones">Invitaciones web</button>
   </nav>
 
   <!-- ---- TAB: USUARIOS ---- -->
@@ -201,6 +202,109 @@
     <p class="admin-empty" id="admin-recibos-empty">Todavía no generaste ningún recibo.</p>
   </section>
 
+  <!-- ---- TAB: INVITACIONES ---- -->
+  <section class="admin-tab-panel" data-tab-panel="invitaciones">
+    <h2>Invitaciones web</h2>
+    <p class="section-intro">Cargá los datos de la pareja y generá su invitación: mismo diseño para todos, solo cambian los textos, fechas y el color de acento. Se descarga como una página lista para subir a Vercel o donde prefieran.</p>
+
+    <div class="invite-grid">
+      <div class="invite-form">
+
+        <div class="admin-card">
+          <h3>La pareja</h3>
+          <label>Nombre 1
+            <input type="text" id="inv-novio1" placeholder="Martina">
+          </label>
+          <label>Nombre 2
+            <input type="text" id="inv-novio2" placeholder="Fede">
+          </label>
+          <label>Color de acento
+            <select id="inv-acento">
+              <option value="dorado">Dorado</option>
+              <option value="terracota">Terracota</option>
+              <option value="rosa">Rosa polvo</option>
+              <option value="salvia">Verde salvia</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="admin-card">
+          <h3>Ceremonia</h3>
+          <label>Fecha de la boda
+            <input type="date" id="inv-fecha">
+          </label>
+          <label>Hora de la ceremonia
+            <input type="time" id="inv-hora-ceremonia" value="17:00">
+          </label>
+          <label>Lugar de la ceremonia
+            <input type="text" id="inv-lugar-ceremonia" placeholder="Parroquia San José">
+          </label>
+          <label>Dirección (opcional)
+            <input type="text" id="inv-direccion-ceremonia">
+          </label>
+          <label>Link de Google Maps (opcional)
+            <input type="url" id="inv-mapa-ceremonia" placeholder="https://maps.google.com/...">
+          </label>
+        </div>
+
+        <div class="admin-card">
+          <h3>Recepción</h3>
+          <label>Hora de la recepción
+            <input type="time" id="inv-hora-recepcion" value="19:00">
+          </label>
+          <label>Lugar de la recepción
+            <input type="text" id="inv-lugar-recepcion" placeholder="Salón Los Encinos">
+          </label>
+          <label>Dirección (opcional)
+            <input type="text" id="inv-direccion-recepcion">
+          </label>
+          <label>Link de Google Maps (opcional)
+            <input type="url" id="inv-mapa-recepcion" placeholder="https://maps.google.com/...">
+          </label>
+        </div>
+
+        <div class="admin-card">
+          <h3>Contenido opcional</h3>
+          <label>Nuestra historia
+            <textarea id="inv-historia" rows="3" placeholder="Cómo se conocieron, la propuesta..."></textarea>
+          </label>
+          <label>Código de vestimenta
+            <input type="text" id="inv-vestimenta" placeholder="Formal / Etiqueta rigurosa / Casual elegante">
+          </label>
+          <label>Mesa de regalos
+            <textarea id="inv-regalos" rows="2" placeholder="Lluvia de sobres, datos de transferencia, link a mesa de regalos..."></textarea>
+          </label>
+          <label>Fecha límite para confirmar (texto libre)
+            <input type="text" id="inv-fecha-limite" placeholder="1 de marzo de 2026">
+          </label>
+          <label>Email donde recibir las confirmaciones (RSVP)
+            <input type="email" id="inv-email-rsvp" placeholder="hola@luafotografia.com">
+          </label>
+        </div>
+
+        <div class="invite-actions">
+          <button type="button" class="btn" onclick="LuaAdmin.actualizarPreviewInvitacion()">Actualizar vista previa</button>
+          <button type="button" class="btn btn-outline" onclick="LuaAdmin.descargarInvitacion()">Descargar HTML</button>
+          <button type="button" class="btn btn-outline" onclick="LuaAdmin.guardarInvitacion()">Guardar en historial</button>
+        </div>
+      </div>
+
+      <div class="invite-preview">
+        <p class="invite-preview-label">Vista previa</p>
+        <iframe id="invite-iframe" title="Vista previa de la invitación"></iframe>
+      </div>
+    </div>
+
+    <div class="admin-card invite-history">
+      <h3>Invitaciones guardadas</h3>
+      <table class="admin-table">
+        <thead><tr><th>Pareja</th><th>Fecha</th><th></th></tr></thead>
+        <tbody id="admin-invitaciones-body"></tbody>
+      </table>
+      <p class="admin-empty" id="admin-invitaciones-empty">Todavía no guardaste ninguna invitación.</p>
+    </div>
+  </section>
+
 </div>
 
 <!-- ===== MODAL: FORM USUARIO ===== -->
@@ -243,6 +347,7 @@
 </div>
 
 <script src="catalogo.js"></script>
+<script src="invitacion-template.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>
