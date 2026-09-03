@@ -375,6 +375,14 @@
   const STORAGE_INVITACIONES = 'lua_admin_invitaciones';
   let invitaciones = leer(STORAGE_INVITACIONES, []);
 
+  // Estado en memoria de lo que no es un <input> simple
+  let invFotoPortada = null;   // dataURL o null
+  let invGaleriaFotos = [];    // array de dataURL
+  let invItinerario = [];      // array de {hora, actividad}
+  let planActual = 'pro';
+
+  const FEATURE_IDS = ['fotoPortada', 'galeria', 'musica', 'mapa', 'vestimenta', 'regalos', 'hashtag', 'itinerario', 'hospedaje', 'rsvp'];
+
   function renderSelectUsuarioInvitacion() {
     const sel = document.getElementById('inv-usuario');
     const valorActual = sel.value;
@@ -388,12 +396,148 @@
     sel.value = valorActual;
   }
 
+  // ---- Planes ----
+  document.querySelectorAll('.plan-tab').forEach((btn) => {
+    btn.addEventListener('click', () => aplicarPlan(btn.dataset.plan));
+  });
+
+  function aplicarPlan(planId) {
+    planActual = planId;
+    const plan = window.LUA_PLANES[planId];
+    document.querySelectorAll('.plan-tab').forEach((b) => b.classList.toggle('is-active', b.dataset.plan === planId));
+    document.getElementById('plan-descripcion').textContent = plan.descripcion;
+    FEATURE_IDS.forEach((f) => {
+      document.getElementById('f-' + f).checked = !!plan.features[f];
+    });
+    actualizarPreviewInvitacion();
+  }
+
+  FEATURE_IDS.forEach((f) => {
+    document.getElementById('f-' + f).addEventListener('change', actualizarPreviewInvitacion);
+  });
+
+  function leerFeatures() {
+    const f = {};
+    FEATURE_IDS.forEach((id) => { f[id] = document.getElementById('f-' + id).checked; });
+    return f;
+  }
+
+  function aplicarFeaturesAlForm(features) {
+    FEATURE_IDS.forEach((id) => {
+      document.getElementById('f-' + id).checked = !!(features && features[id]);
+    });
+  }
+
+  // ---- Fotos (portada + galería), convertidas a dataURL para ir incrustadas en el HTML final ----
+  function leerArchivoComoDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function renderFotoPortadaPreview() {
+    const cont = document.getElementById('inv-foto-portada-preview');
+    cont.innerHTML = '';
+    if (!invFotoPortada) return;
+    const div = document.createElement('div');
+    div.className = 'foto-thumb';
+    div.innerHTML = `<img src="${invFotoPortada}"><button type="button" title="Quitar">✕</button>`;
+    div.querySelector('button').addEventListener('click', () => {
+      invFotoPortada = null;
+      document.getElementById('inv-foto-portada').value = '';
+      renderFotoPortadaPreview();
+      actualizarPreviewInvitacion();
+    });
+    cont.appendChild(div);
+  }
+
+  function renderGaleriaPreview() {
+    const cont = document.getElementById('inv-galeria-preview');
+    cont.innerHTML = '';
+    invGaleriaFotos.forEach((src, idx) => {
+      const div = document.createElement('div');
+      div.className = 'foto-thumb';
+      div.innerHTML = `<img src="${src}"><button type="button" title="Quitar">✕</button>`;
+      div.querySelector('button').addEventListener('click', () => {
+        invGaleriaFotos.splice(idx, 1);
+        renderGaleriaPreview();
+        actualizarPreviewInvitacion();
+      });
+      cont.appendChild(div);
+    });
+  }
+
+  document.getElementById('inv-foto-portada').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    invFotoPortada = await leerArchivoComoDataURL(file);
+    renderFotoPortadaPreview();
+    actualizarPreviewInvitacion();
+  });
+
+  document.getElementById('inv-galeria').addEventListener('change', async (e) => {
+    const archivos = Array.from(e.target.files).slice(0, 6 - invGaleriaFotos.length);
+    for (const file of archivos) {
+      invGaleriaFotos.push(await leerArchivoComoDataURL(file));
+    }
+    e.target.value = '';
+    renderGaleriaPreview();
+    actualizarPreviewInvitacion();
+  });
+
+  // ---- Itinerario ----
+  function agregarItinerario() {
+    const hora = document.getElementById('itin-hora').value.trim();
+    const actividad = document.getElementById('itin-actividad').value.trim();
+    if (!hora && !actividad) return;
+    invItinerario.push({ hora, actividad });
+    document.getElementById('itin-hora').value = '';
+    document.getElementById('itin-actividad').value = '';
+    renderItinerarioAdmin();
+    actualizarPreviewInvitacion();
+  }
+
+  function renderItinerarioAdmin() {
+    const ul = document.getElementById('itin-list-admin');
+    const empty = document.getElementById('itin-empty');
+    ul.querySelectorAll('.itin-row').forEach((el) => el.remove());
+    if (invItinerario.length === 0) {
+      empty.style.display = '';
+      return;
+    }
+    empty.style.display = 'none';
+    invItinerario.forEach((it, idx) => {
+      const li = document.createElement('li');
+      li.className = 'itin-row';
+      li.innerHTML = `<span>${escapeHtml(it.hora)} — ${escapeHtml(it.actividad)}</span>`;
+      const btn = document.createElement('button');
+      btn.textContent = 'Quitar';
+      btn.addEventListener('click', () => {
+        invItinerario.splice(idx, 1);
+        renderItinerarioAdmin();
+        actualizarPreviewInvitacion();
+      });
+      li.appendChild(btn);
+      ul.appendChild(li);
+    });
+  }
+
+  // ---- Form -> datos ----
   function leerFormInvitacion() {
     return {
       novio1: document.getElementById('inv-novio1').value.trim() || 'Novia',
       novio2: document.getElementById('inv-novio2').value.trim() || 'Novio',
       plantilla: document.getElementById('inv-plantilla').value,
       acento: document.getElementById('inv-acento').value,
+      plan: planActual,
+      features: leerFeatures(),
+      fotoPortada: invFotoPortada,
+      galeriaFotos: invGaleriaFotos.slice(),
+      itinerario: invItinerario.slice(),
+      musicaUrl: document.getElementById('inv-musica-url').value.trim(),
       fecha: document.getElementById('inv-fecha').value,
       horaCeremonia: document.getElementById('inv-hora-ceremonia').value,
       lugarCeremonia: document.getElementById('inv-lugar-ceremonia').value.trim(),
@@ -406,6 +550,8 @@
       historia: document.getElementById('inv-historia').value.trim(),
       vestimenta: document.getElementById('inv-vestimenta').value.trim(),
       regalos: document.getElementById('inv-regalos').value.trim(),
+      hashtag: document.getElementById('inv-hashtag').value.trim(),
+      hospedaje: document.getElementById('inv-hospedaje').value.trim(),
       fechaLimiteRSVP: document.getElementById('inv-fecha-limite').value.trim(),
       emailRSVP: document.getElementById('inv-email-rsvp').value.trim(),
     };
@@ -474,8 +620,24 @@
     document.getElementById('inv-historia').value = d.historia || '';
     document.getElementById('inv-vestimenta').value = d.vestimenta || '';
     document.getElementById('inv-regalos').value = d.regalos || '';
+    document.getElementById('inv-hashtag').value = d.hashtag || '';
+    document.getElementById('inv-hospedaje').value = d.hospedaje || '';
+    document.getElementById('inv-musica-url').value = d.musicaUrl || '';
     document.getElementById('inv-fecha-limite').value = d.fechaLimiteRSVP || '';
     document.getElementById('inv-email-rsvp').value = d.emailRSVP || '';
+
+    planActual = d.plan || 'pro';
+    document.querySelectorAll('.plan-tab').forEach((b) => b.classList.toggle('is-active', b.dataset.plan === planActual));
+    document.getElementById('plan-descripcion').textContent = (window.LUA_PLANES[planActual] || {}).descripcion || '';
+    aplicarFeaturesAlForm(d.features);
+
+    invFotoPortada = d.fotoPortada || null;
+    invGaleriaFotos = (d.galeriaFotos || []).slice();
+    invItinerario = (d.itinerario || []).slice();
+    renderFotoPortadaPreview();
+    renderGaleriaPreview();
+    renderItinerarioAdmin();
+
     renderSelectUsuarioInvitacion();
     document.getElementById('inv-usuario').value = r.asignadoUsuarioId || '';
     actualizarPreviewInvitacion();
@@ -502,11 +664,13 @@
     invitaciones.forEach((r) => {
       const usuarioAsignado = usuarios.find((u) => u.id === r.asignadoUsuarioId);
       const nombrePlantilla = (window.LUA_INVITACION_TEMPLATES[r.datos.plantilla] || {}).label || 'Clásica';
+      const nombrePlan = (window.LUA_PLANES[r.datos.plan] || {}).label || '—';
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${escapeHtml(r.datos.novio1)} &amp; ${escapeHtml(r.datos.novio2)}</td>
         <td>${escapeHtml(r.datos.fecha || '—')}</td>
         <td>${escapeHtml(nombrePlantilla)}</td>
+        <td>${escapeHtml(nombrePlan)}</td>
         <td>${usuarioAsignado ? escapeHtml(usuarioAsignado.nombre) : '<span style="color:var(--dust)">Sin asignar</span>'}</td>
         <td class="row-actions">
           <button data-cargar="${r.id}">Cargar</button>
@@ -538,5 +702,6 @@
     abrirFormUsuario, cerrarFormUsuario, guardarUsuario, eliminarUsuario,
     agregarDelCatalogo, agregarLibre, generarRecibo, nuevoRecibo,
     actualizarPreviewInvitacion, descargarInvitacion, guardarInvitacion,
+    agregarItinerario,
   };
 })();

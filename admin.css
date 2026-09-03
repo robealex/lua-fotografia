@@ -248,6 +248,40 @@
 }
 .invite-history { margin-top: 34px; }
 
+.plan-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+.plan-tab {
+  flex: 1;
+  background: var(--parchment);
+  border: 1px solid var(--dust);
+  border-radius: 2px;
+  padding: 10px;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  cursor: pointer;
+  color: var(--ink-soft);
+}
+.plan-tab.is-active { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 500; }
+
+.feature-toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; margin-top: 16px; }
+.feature-toggles .builder-toggle { margin-bottom: 4px; font-size: 0.88rem; }
+
+.foto-preview-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 14px; }
+.foto-preview-row img { width: 58px; height: 58px; object-fit: cover; border-radius: 2px; border: 1px solid var(--dust); }
+.foto-thumb { position: relative; }
+.foto-thumb button {
+  position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--ink); color: #fff; border: none; font-size: 0.65rem; cursor: pointer; line-height: 1;
+}
+
+.itin-add-row { display: flex; gap: 10px; margin-bottom: 14px; }
+.itin-add-row input { flex: 1; }
+.itin-list-admin { list-style: none; margin: 0; padding: 0; }
+.itin-list-admin li.itin-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0; border-top: 1px solid var(--dust); font-size: 0.9rem;
+}
+.itin-list-admin li.itin-row button { background: none; border: none; color: var(--dust); text-decoration: underline; cursor: pointer; font-size: 0.8rem; }
+
 @media (max-width: 900px) {
   .invite-grid { grid-template-columns: 1fr; }
   .invite-preview { position: static; }

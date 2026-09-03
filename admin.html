@@ -243,6 +243,29 @@
         </div>
 
         <div class="admin-card">
+          <h3>Plan</h3>
+          <div class="plan-tabs" id="plan-tabs">
+            <button type="button" class="plan-tab" data-plan="basica">Básica</button>
+            <button type="button" class="plan-tab is-active" data-plan="pro">Pro</button>
+            <button type="button" class="plan-tab" data-plan="gold">Gold</button>
+          </div>
+          <p class="builder-sub" id="plan-descripcion">Todo lo de Básica + música de fondo, galería de fotos, código de vestimenta, mesa de regalos y hashtag.</p>
+          <p class="builder-sub" style="margin-top:10px;">Elegir un plan prende sus funciones automáticamente. Podés activar o desactivar cada una a mano abajo, aunque no correspondan al plan.</p>
+          <div class="feature-toggles">
+            <label class="builder-toggle"><input type="checkbox" id="f-fotoPortada" checked><span>Foto de portada</span></label>
+            <label class="builder-toggle"><input type="checkbox" id="f-galeria" checked><span>Galería de fotos</span></label>
+            <label class="builder-toggle"><input type="checkbox" id="f-musica" checked><span>Música de fondo</span></label>
+            <label class="builder-toggle"><input type="checkbox" id="f-mapa" checked><span>Ubicación / mapa</span></label>
+            <label class="builder-toggle"><input type="checkbox" id="f-vestimenta" checked><span>Código de vestimenta</span></label>
+            <label class="builder-toggle"><input type="checkbox" id="f-regalos" checked><span>Mesa de regalos</span></label>
+            <label class="builder-toggle"><input type="checkbox" id="f-hashtag" checked><span>Hashtag para redes</span></label>
+            <label class="builder-toggle"><input type="checkbox" id="f-itinerario"><span>Itinerario</span></label>
+            <label class="builder-toggle"><input type="checkbox" id="f-hospedaje"><span>Opciones de hospedaje</span></label>
+            <label class="builder-toggle"><input type="checkbox" id="f-rsvp" checked><span>Confirmación de asistencia (RSVP)</span></label>
+          </div>
+        </div>
+
+        <div class="admin-card">
           <h3>Ceremonia</h3>
           <label>Fecha de la boda
             <input type="date" id="inv-fecha">
@@ -278,6 +301,33 @@
         </div>
 
         <div class="admin-card">
+          <h3>Fotos</h3>
+          <label>Foto de portada (1 foto)
+            <input type="file" id="inv-foto-portada" accept="image/*">
+          </label>
+          <div id="inv-foto-portada-preview" class="foto-preview-row"></div>
+          <label>Galería de fotos (hasta 6)
+            <input type="file" id="inv-galeria" accept="image/*" multiple>
+          </label>
+          <div id="inv-galeria-preview" class="foto-preview-row"></div>
+          <label>Música de fondo (link directo a un .mp3)
+            <input type="url" id="inv-musica-url" placeholder="https://.../cancion.mp3">
+          </label>
+        </div>
+
+        <div class="admin-card">
+          <h3>Itinerario</h3>
+          <div class="itin-add-row">
+            <input type="text" id="itin-hora" placeholder="18:00" style="max-width:100px;">
+            <input type="text" id="itin-actividad" placeholder="Cóctel de bienvenida">
+            <button type="button" class="btn btn-outline" onclick="LuaAdmin.agregarItinerario()">Agregar</button>
+          </div>
+          <ul class="itin-list-admin" id="itin-list-admin">
+            <li class="admin-empty" id="itin-empty">Sin puntos en el itinerario todavía.</li>
+          </ul>
+        </div>
+
+        <div class="admin-card">
           <h3>Contenido opcional</h3>
           <label>Nuestra historia
             <textarea id="inv-historia" rows="3" placeholder="Cómo se conocieron, la propuesta..."></textarea>
@@ -287,6 +337,12 @@
           </label>
           <label>Mesa de regalos
             <textarea id="inv-regalos" rows="2" placeholder="Lluvia de sobres, datos de transferencia, link a mesa de regalos..."></textarea>
+          </label>
+          <label>Hashtag para redes sociales
+            <input type="text" id="inv-hashtag" placeholder="MartinaYFede2026">
+          </label>
+          <label>Opciones de hospedaje
+            <textarea id="inv-hospedaje" rows="2" placeholder="Hoteles recomendados, tarifas especiales..."></textarea>
           </label>
           <label>Fecha límite para confirmar (texto libre)
             <input type="text" id="inv-fecha-limite" placeholder="1 de marzo de 2026">
@@ -312,7 +368,7 @@
     <div class="admin-card invite-history">
       <h3>Invitaciones guardadas</h3>
       <table class="admin-table">
-        <thead><tr><th>Pareja</th><th>Fecha</th><th>Diseño</th><th>Asignada a</th><th></th></tr></thead>
+        <thead><tr><th>Pareja</th><th>Fecha</th><th>Diseño</th><th>Plan</th><th>Asignada a</th><th></th></tr></thead>
         <tbody id="admin-invitaciones-body"></tbody>
       </table>
       <p class="admin-empty" id="admin-invitaciones-empty">Todavía no guardaste ninguna invitación.</p>
