@@ -43,54 +43,49 @@
       <h1>Tus fotos, cuando quieras</h1>
       <p class="login-copy">Ingresá con el email y la contraseña que te dimos al entregar tu galería.</p>
 
-      <form class="login-form" onsubmit="return mostrarGaleria(event)">
+      <form class="login-form" onsubmit="return intentarIngresar(event)">
         <label>Email
-          <input type="email" name="email" placeholder="vos@email.com" required>
+          <input type="email" id="login-email" name="email" placeholder="vos@email.com" required>
         </label>
         <label>Contraseña
-          <input type="password" name="password" required>
+          <input type="password" id="login-password" name="password" required>
         </label>
         <button type="submit" class="btn">Ingresar</button>
-        <p class="form-note">Maqueta de muestra — el login real se conecta cuando activemos Google Drive.</p>
+        <p class="form-note" id="login-error" hidden style="color:#a34a3a;">Email o contraseña incorrectos.</p>
+        <p class="form-note">Ingresá con los datos que te dio Lua Fotografía al confirmar tu evento.</p>
       </form>
 
       <p class="login-help">¿No tenés tus datos de acceso? <a href="index.html#contacto">Escribinos</a>.</p>
     </div>
   </section>
 
-  <!-- ===== PANTALLA 2: GALERÍA (demo, se muestra tras "ingresar") ===== -->
+  <!-- ===== PANTALLA 2: GALERÍA (datos reales del usuario que inició sesión) ===== -->
   <section id="gallery-screen" class="gallery-screen" hidden>
     <div class="gallery-head">
       <div>
         <p class="kicker">Bienvenida</p>
-        <h1 id="gallery-title">Martina &amp; Fede — 14 de marzo</h1>
+        <h1 id="gallery-title">—</h1>
       </div>
-      <button class="btn btn-ghost" onclick="volverAlLogin()">Cerrar sesión</button>
+      <button class="btn btn-ghost" onclick="cerrarSesion()">Cerrar sesión</button>
     </div>
 
-    <p class="gallery-intro">Estas son las carpetas de tu Google Drive. Al conectar la cuenta, cada tarjeta va a mostrar las fotos reales de tu carpeta.</p>
+    <p class="gallery-intro">Esta es la carpeta de Google Drive que te asignaron. Al conectar la cuenta de Google, acá vas a ver las fotos reales.</p>
 
     <div class="folder-grid">
       <article class="folder-card">
         <div class="folder-thumb" style="--tint: 38 45% 88%;">📁</div>
-        <h3>Ceremonia</h3>
-        <p>128 fotos</p>
+        <h3 id="gallery-carpeta">—</h3>
+        <p>Carpeta asignada</p>
       </article>
-      <article class="folder-card">
-        <div class="folder-thumb" style="--tint: 30 40% 82%;">📁</div>
-        <h3>Fiesta</h3>
-        <p>241 fotos</p>
-      </article>
-      <article class="folder-card">
-        <div class="folder-thumb" style="--tint: 350 22% 62%;">📁</div>
-        <h3>Retratos de pareja</h3>
-        <p>64 fotos</p>
-      </article>
-      <article class="folder-card">
-        <div class="folder-thumb" style="--tint: 35 35% 85%;">📁</div>
-        <h3>Familia y amigos</h3>
-        <p>97 fotos</p>
-      </article>
+    </div>
+
+    <div id="invitacion-box" class="invitacion-box" hidden>
+      <div>
+        <p class="kicker">Tu invitación</p>
+        <h3 id="invitacion-titulo">—</h3>
+        <p class="invitacion-sub">Compartila con tus invitados cuando esté lista.</p>
+      </div>
+      <button type="button" class="btn" onclick="abrirInvitacion()">Ver mi invitación</button>
     </div>
   </section>
 
@@ -105,18 +100,91 @@
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// DEMO ONLY: reemplazar por login real (backend + sesión) cuando esté conectado Google Drive.
-function mostrarGaleria(e) {
+// Comparte el mismo almacenamiento local que usa el panel de admin (admin.js).
+// Funciona de punta a punta en este navegador; para que un cliente entre desde
+// otro dispositivo hace falta el backend real (Google Cloud + base de datos).
+const USUARIOS_KEY = 'lua_admin_usuarios';
+const INVITACIONES_KEY = 'lua_admin_invitaciones';
+const SESION_CLIENTE_KEY = 'lua_cliente_sesion';
+
+function leerJSON(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+let usuarioActual = null;
+
+function intentarIngresar(e) {
   e.preventDefault();
-  document.getElementById('login-screen').hidden = true;
-  document.getElementById('gallery-screen').hidden = false;
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value;
+  const usuarios = leerJSON(USUARIOS_KEY, []);
+  const match = usuarios.find((u) => u.email.trim().toLowerCase() === email && u.password === password);
+  const error = document.getElementById('login-error');
+  if (!match) {
+    error.hidden = false;
+    return false;
+  }
+  error.hidden = true;
+  sessionStorage.setItem(SESION_CLIENTE_KEY, match.id);
+  mostrarGaleria(match);
   return false;
 }
-function volverAlLogin() {
+
+function mostrarGaleria(usuario) {
+  usuarioActual = usuario;
+  document.getElementById('login-screen').hidden = true;
+  document.getElementById('gallery-screen').hidden = false;
+  document.getElementById('gallery-title').textContent = `${usuario.nombre} — ${usuario.evento || 'Tu evento'}`;
+  document.getElementById('gallery-carpeta').textContent = usuario.carpeta || 'Carpeta pendiente de asignar';
+
+  const invitaciones = leerJSON(INVITACIONES_KEY, []);
+  const invitacion = invitaciones.find((i) => i.asignadoUsuarioId === usuario.id);
+  const box = document.getElementById('invitacion-box');
+  if (invitacion) {
+    document.getElementById('invitacion-titulo').textContent =
+      `${invitacion.datos.novio1} & ${invitacion.datos.novio2}`;
+    box.hidden = false;
+    box.dataset.invitacionId = invitacion.id;
+  } else {
+    box.hidden = true;
+  }
+}
+
+function abrirInvitacion() {
+  const invitaciones = leerJSON(INVITACIONES_KEY, []);
+  const box = document.getElementById('invitacion-box');
+  const invitacion = invitaciones.find((i) => i.id === box.dataset.invitacionId);
+  if (!invitacion || !window.LUA_INVITACION_TEMPLATES) return;
+  const plantilla = window.LUA_INVITACION_TEMPLATES[invitacion.datos.plantilla] || window.LUA_INVITACION_TEMPLATES.clasica;
+  const html = plantilla.generar(invitacion.datos);
+  const blob = new Blob([html], { type: 'text/html' });
+  window.open(URL.createObjectURL(blob), '_blank');
+}
+
+function cerrarSesion() {
+  sessionStorage.removeItem(SESION_CLIENTE_KEY);
+  usuarioActual = null;
   document.getElementById('gallery-screen').hidden = true;
   document.getElementById('login-screen').hidden = false;
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
 }
+
+// Si ya había una sesión de cliente activa, la retomamos
+(function () {
+  const idGuardado = sessionStorage.getItem(SESION_CLIENTE_KEY);
+  if (!idGuardado) return;
+  const usuarios = leerJSON(USUARIOS_KEY, []);
+  const usuario = usuarios.find((u) => u.id === idGuardado);
+  if (usuario) mostrarGaleria(usuario);
+})();
 </script>
 <script src="menu.js"></script>
+<script src="invitacion-template.js"></script>
 </body>
 </html>

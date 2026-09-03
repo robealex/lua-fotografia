@@ -69,6 +69,7 @@
           <th>Email</th>
           <th>Evento</th>
           <th>Carpeta de Drive</th>
+          <th>Invitación</th>
           <th></th>
         </tr>
       </thead>
@@ -218,6 +219,13 @@
           <label>Nombre 2
             <input type="text" id="inv-novio2" placeholder="Fede">
           </label>
+          <label>Diseño
+            <select id="inv-plantilla">
+              <option value="clasica">Clásica — serif elegante</option>
+              <option value="moderna">Moderna — minimalista</option>
+              <option value="romantica">Romántica — suave e íntima</option>
+            </select>
+          </label>
           <label>Color de acento
             <select id="inv-acento">
               <option value="dorado">Dorado</option>
@@ -226,6 +234,12 @@
               <option value="salvia">Verde salvia</option>
             </select>
           </label>
+          <label>Asignar a un usuario del área de clientes
+            <select id="inv-usuario">
+              <option value="">— Sin asignar todavía —</option>
+            </select>
+          </label>
+          <p class="builder-sub" style="margin-top:-6px;">Al asignarla, ese usuario va a ver un botón "Tu invitación" cuando entre a su cuenta (en este mismo navegador).</p>
         </div>
 
         <div class="admin-card">
@@ -298,7 +312,7 @@
     <div class="admin-card invite-history">
       <h3>Invitaciones guardadas</h3>
       <table class="admin-table">
-        <thead><tr><th>Pareja</th><th>Fecha</th><th></th></tr></thead>
+        <thead><tr><th>Pareja</th><th>Fecha</th><th>Diseño</th><th>Asignada a</th><th></th></tr></thead>
         <tbody id="admin-invitaciones-body"></tbody>
       </table>
       <p class="admin-empty" id="admin-invitaciones-empty">Todavía no guardaste ninguna invitación.</p>

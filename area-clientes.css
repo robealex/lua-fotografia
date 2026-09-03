@@ -10,6 +10,7 @@
   justify-content: center;
   padding: 4vw 0;
 }
+.login-screen[hidden] { display: none; }
 .login-card {
   max-width: 420px;
   width: 100%;
@@ -115,6 +116,21 @@
   margin: 0;
 }
 
+.invitacion-box {
+  margin-top: 5vw;
+  background: var(--linen);
+  border-radius: 2px;
+  padding: 26px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.invitacion-box[hidden] { display: none; }
+.invitacion-box h3 { font-size: 1.15rem; margin: 4px 0; }
+.invitacion-sub { color: var(--ink-soft); font-size: 0.88rem; margin: 0; }
+
 @media (max-width: 800px) {
   .folder-grid { grid-template-columns: repeat(2, 1fr); }
   .gallery-head { flex-direction: column; }
@@ -122,4 +138,5 @@
 @media (max-width: 480px) {
   .folder-grid { grid-template-columns: 1fr; }
   .login-form { padding: 20px; }
+  .invitacion-box { flex-direction: column; align-items: flex-start; }
 }

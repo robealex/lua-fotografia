@@ -54,6 +54,7 @@
     renderUsuarios();
     renderSelectClientes();
     renderRecibos();
+    renderSelectUsuarioInvitacion();
     renderInvitaciones();
     const fechaInput = document.getElementById('recibo-fecha');
     if (fechaInput && !fechaInput.value) fechaInput.value = new Date().toISOString().slice(0, 10);
@@ -66,7 +67,10 @@
       document.querySelectorAll('.admin-tab-panel').forEach((p) => p.classList.remove('is-active'));
       btn.classList.add('is-active');
       document.querySelector(`[data-tab-panel="${btn.dataset.tab}"]`).classList.add('is-active');
-      if (btn.dataset.tab === 'invitaciones') actualizarPreviewInvitacion();
+      if (btn.dataset.tab === 'invitaciones') {
+        renderSelectUsuarioInvitacion();
+        actualizarPreviewInvitacion();
+      }
     });
   });
 
@@ -81,12 +85,17 @@
     }
     empty.style.display = 'none';
     usuarios.forEach((u) => {
+      const inv = invitaciones.find((i) => i.asignadoUsuarioId === u.id);
+      const invCelda = inv
+        ? `${escapeHtml(inv.datos.novio1)} &amp; ${escapeHtml(inv.datos.novio2)}`
+        : '<span style="color:var(--dust)">Sin asignar</span>';
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${escapeHtml(u.nombre)}</td>
         <td>${escapeHtml(u.email)}</td>
         <td>${escapeHtml(u.evento || '')}</td>
         <td>${escapeHtml(u.carpeta)}</td>
+        <td>${invCelda}</td>
         <td class="row-actions">
           <button data-edit="${u.id}">Editar</button>
           <button data-del="${u.id}">Eliminar</button>
@@ -366,10 +375,24 @@
   const STORAGE_INVITACIONES = 'lua_admin_invitaciones';
   let invitaciones = leer(STORAGE_INVITACIONES, []);
 
+  function renderSelectUsuarioInvitacion() {
+    const sel = document.getElementById('inv-usuario');
+    const valorActual = sel.value;
+    sel.innerHTML = '<option value="">— Sin asignar todavía —</option>';
+    usuarios.forEach((u) => {
+      const opt = document.createElement('option');
+      opt.value = u.id;
+      opt.textContent = `${u.nombre} (${u.email})`;
+      sel.appendChild(opt);
+    });
+    sel.value = valorActual;
+  }
+
   function leerFormInvitacion() {
     return {
       novio1: document.getElementById('inv-novio1').value.trim() || 'Novia',
       novio2: document.getElementById('inv-novio2').value.trim() || 'Novio',
+      plantilla: document.getElementById('inv-plantilla').value,
       acento: document.getElementById('inv-acento').value,
       fecha: document.getElementById('inv-fecha').value,
       horaCeremonia: document.getElementById('inv-hora-ceremonia').value,
@@ -388,16 +411,20 @@
     };
   }
 
+  function generarHtmlInvitacion(datos) {
+    const plantilla = window.LUA_INVITACION_TEMPLATES[datos.plantilla] || window.LUA_INVITACION_TEMPLATES.clasica;
+    return plantilla.generar(datos);
+  }
+
   function actualizarPreviewInvitacion() {
     const datos = leerFormInvitacion();
-    const html = window.LUA_generarInvitacionHTML(datos);
-    document.getElementById('invite-iframe').srcdoc = html;
-    return html;
+    document.getElementById('invite-iframe').srcdoc = generarHtmlInvitacion(datos);
+    return datos;
   }
 
   function descargarInvitacion() {
     const datos = leerFormInvitacion();
-    const html = window.LUA_generarInvitacionHTML(datos);
+    const html = generarHtmlInvitacion(datos);
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -414,10 +441,17 @@
 
   function guardarInvitacion() {
     const datos = leerFormInvitacion();
-    const registro = { id: 'i' + Date.now(), datos, guardadoEl: new Date().toISOString().slice(0, 10) };
+    const usuarioId = document.getElementById('inv-usuario').value || null;
+    const registro = {
+      id: 'i' + Date.now(),
+      datos,
+      asignadoUsuarioId: usuarioId,
+      guardadoEl: new Date().toISOString().slice(0, 10),
+    };
     invitaciones.unshift(registro);
     guardar(STORAGE_INVITACIONES, invitaciones);
     renderInvitaciones();
+    renderUsuarios();
   }
 
   function cargarInvitacion(id) {
@@ -426,6 +460,7 @@
     const d = r.datos;
     document.getElementById('inv-novio1').value = d.novio1 || '';
     document.getElementById('inv-novio2').value = d.novio2 || '';
+    document.getElementById('inv-plantilla').value = d.plantilla || 'clasica';
     document.getElementById('inv-acento').value = d.acento || 'dorado';
     document.getElementById('inv-fecha').value = d.fecha || '';
     document.getElementById('inv-hora-ceremonia').value = d.horaCeremonia || '';
@@ -441,6 +476,8 @@
     document.getElementById('inv-regalos').value = d.regalos || '';
     document.getElementById('inv-fecha-limite').value = d.fechaLimiteRSVP || '';
     document.getElementById('inv-email-rsvp').value = d.emailRSVP || '';
+    renderSelectUsuarioInvitacion();
+    document.getElementById('inv-usuario').value = r.asignadoUsuarioId || '';
     actualizarPreviewInvitacion();
     document.querySelector('[data-tab="invitaciones"]').click();
   }
@@ -450,6 +487,7 @@
     invitaciones = invitaciones.filter((x) => x.id !== id);
     guardar(STORAGE_INVITACIONES, invitaciones);
     renderInvitaciones();
+    renderUsuarios();
   }
 
   function renderInvitaciones() {
@@ -462,10 +500,14 @@
     }
     empty.style.display = 'none';
     invitaciones.forEach((r) => {
+      const usuarioAsignado = usuarios.find((u) => u.id === r.asignadoUsuarioId);
+      const nombrePlantilla = (window.LUA_INVITACION_TEMPLATES[r.datos.plantilla] || {}).label || 'Clásica';
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${escapeHtml(r.datos.novio1)} &amp; ${escapeHtml(r.datos.novio2)}</td>
         <td>${escapeHtml(r.datos.fecha || '—')}</td>
+        <td>${escapeHtml(nombrePlantilla)}</td>
+        <td>${usuarioAsignado ? escapeHtml(usuarioAsignado.nombre) : '<span style="color:var(--dust)">Sin asignar</span>'}</td>
         <td class="row-actions">
           <button data-cargar="${r.id}">Cargar</button>
           <button data-borrar="${r.id}">Eliminar</button>
@@ -484,6 +526,9 @@
     div.textContent = str == null ? '' : str;
     return div.innerHTML;
   }
+
+  document.getElementById('inv-plantilla').addEventListener('change', actualizarPreviewInvitacion);
+  document.getElementById('inv-acento').addEventListener('change', actualizarPreviewInvitacion);
 
   // ===================== Init =====================
   if (sessionStorage.getItem(STORAGE_SESSION)) mostrarPanel();
