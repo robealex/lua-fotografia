@@ -192,6 +192,12 @@ function plantillaClasica(data) {
 <html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${nombresPlano(data)}</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="${nombresPlano(data)}">
+<meta property="og:description" content="${data.tipoEvento === 'xv' ? 'Mis XV años' : 'Nos casamos'} — ${fechaLarga}${data.lugarCeremonia ? ' en ' + escapeHtmlInv(data.lugarCeremonia) : ''}. ¡Los esperamos!">
+<meta property="og:image" content="https://lua-fotografia.vercel.app/images/logo.png">
+<meta property="og:url" content="https://lua-fotografia.vercel.app/invitaciones/${data.slug || 'invitacion'}.html">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -268,6 +274,12 @@ function plantillaModerna(data) {
 <html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${nombresPlano(data)}</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="${nombresPlano(data)}">
+<meta property="og:description" content="${data.tipoEvento === 'xv' ? 'Mis XV años' : 'Nos casamos'} — ${fechaLarga}${data.lugarCeremonia ? ' en ' + escapeHtmlInv(data.lugarCeremonia) : ''}. ¡Los esperamos!">
+<meta property="og:image" content="https://lua-fotografia.vercel.app/images/logo.png">
+<meta property="og:url" content="https://lua-fotografia.vercel.app/invitaciones/${data.slug || 'invitacion'}.html">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -345,6 +357,12 @@ function plantillaRomantica(data) {
 <html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${nombresPlano(data)}</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="${nombresPlano(data)}">
+<meta property="og:description" content="${data.tipoEvento === 'xv' ? 'Mis XV años' : 'Nos casamos'} — ${fechaLarga}${data.lugarCeremonia ? ' en ' + escapeHtmlInv(data.lugarCeremonia) : ''}. ¡Los esperamos!">
+<meta property="og:image" content="https://lua-fotografia.vercel.app/images/logo.png">
+<meta property="og:url" content="https://lua-fotografia.vercel.app/invitaciones/${data.slug || 'invitacion'}.html">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
