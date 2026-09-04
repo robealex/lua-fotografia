@@ -88,6 +88,13 @@ function hashtagHTML(hashtag) {
   return `<p class="hashtag">#${escapeHtmlInv(limpio)}</p>`;
 }
 
+// Mapa embebido sin necesitar API key de Google (funciona con el parámetro output=embed)
+function mapaEmbedHTML(query) {
+  if (!query) return '';
+  const src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`;
+  return `<iframe class="mapa-embed" src="${src}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>`;
+}
+
 // Script compartido por los 3 diseños: cuenta regresiva (con segundos), RSVP y música
 function scriptComunInvitacion(fechaISOConHora, mailtoRSVP) {
   return `
@@ -142,8 +149,9 @@ function scriptComunInvitacion(fechaISOConHora, mailtoRSVP) {
 
 function rsvpFormHTML(data, fechaLarga) {
   const destinatario = data.tipoEvento === 'xv' ? escapeHtmlInv(data.novio1) : 'los novios';
+  const fechaLimite = data.fechaLimiteRSVP ? formatearFechaLarga(data.fechaLimiteRSVP) : fechaLarga;
   return `
-    <p>Antes del ${escapeHtmlInv(data.fechaLimiteRSVP || fechaLarga)}, contanos si venís.</p>
+    <p>Antes del ${escapeHtmlInv(fechaLimite)}, contanos si venís.</p>
     <form class="rsvp-form" onsubmit="return enviarRSVP(event)">
       <label>Nombre completo<input type="text" id="rsvp-nombre" required></label>
       <label>¿Asistirás?
@@ -210,6 +218,7 @@ function plantillaClasica(data) {
   .detalle-card { background:var(--cream); border:1px solid #d8cdb6; border-radius:2px; padding:24px; }
   .detalle-card h3 { font-family:var(--serif); font-size:1.15rem; margin:0 0 10px; }
   .detalle-card p { margin:4px 0; font-size:0.92rem; }
+  .mapa-embed { width:100%; height:160px; border:0; border-radius:2px; margin-top:12px; filter:grayscale(0.15); }
   .divider { width:40px; height:1px; background:var(--acento); margin:0 auto 22px; }
   .itin-list { text-align:left; max-width:420px; margin:0 auto; }
   .itin-item { display:flex; gap:18px; padding:12px 0; border-bottom:1px solid #d8cdb6; }
@@ -237,8 +246,8 @@ ${data.historia ? `<section class="section"><div class="divider"></div><h2>Nuest
 <section class="section">
   <div class="divider"></div><h2>Detalles del evento</h2>
   <div class="detalles">
-    <div class="detalle-card"><h3>Ceremonia</h3><p><strong>Hora:</strong> ${escapeHtmlInv(data.horaCeremonia)}</p><p><strong>Lugar:</strong> ${escapeHtmlInv(data.lugarCeremonia)}</p>${data.direccionCeremonia ? `<p>${escapeHtmlInv(data.direccionCeremonia)}</p>` : ''}${f.mapa && data.mapaCeremonia ? `<p><a href="${escapeHtmlInv(data.mapaCeremonia)}" target="_blank" rel="noopener">Ver mapa →</a></p>` : ''}</div>
-    <div class="detalle-card"><h3>Recepción</h3><p><strong>Hora:</strong> ${escapeHtmlInv(data.horaRecepcion)}</p><p><strong>Lugar:</strong> ${escapeHtmlInv(data.lugarRecepcion)}</p>${data.direccionRecepcion ? `<p>${escapeHtmlInv(data.direccionRecepcion)}</p>` : ''}${f.mapa && data.mapaRecepcion ? `<p><a href="${escapeHtmlInv(data.mapaRecepcion)}" target="_blank" rel="noopener">Ver mapa →</a></p>` : ''}</div>
+    <div class="detalle-card"><h3>Ceremonia</h3><p><strong>Hora:</strong> ${escapeHtmlInv(data.horaCeremonia)}</p><p><strong>Lugar:</strong> ${escapeHtmlInv(data.lugarCeremonia)}</p>${data.direccionCeremonia ? `<p>${escapeHtmlInv(data.direccionCeremonia)}</p>` : ''}${f.mapa && (data.direccionCeremonia || data.lugarCeremonia) ? mapaEmbedHTML(data.direccionCeremonia || data.lugarCeremonia) : ''}${f.mapa && data.mapaCeremonia ? `<p><a href="${escapeHtmlInv(data.mapaCeremonia)}" target="_blank" rel="noopener">Ver mapa completo →</a></p>` : ''}</div>
+    <div class="detalle-card"><h3>Recepción</h3><p><strong>Hora:</strong> ${escapeHtmlInv(data.horaRecepcion)}</p><p><strong>Lugar:</strong> ${escapeHtmlInv(data.lugarRecepcion)}</p>${data.direccionRecepcion ? `<p>${escapeHtmlInv(data.direccionRecepcion)}</p>` : ''}${f.mapa && (data.direccionRecepcion || data.lugarRecepcion) ? mapaEmbedHTML(data.direccionRecepcion || data.lugarRecepcion) : ''}${f.mapa && data.mapaRecepcion ? `<p><a href="${escapeHtmlInv(data.mapaRecepcion)}" target="_blank" rel="noopener">Ver mapa completo →</a></p>` : ''}</div>
   </div>
 </section>
 ${f.vestimenta && data.vestimenta ? `<section class="section"><div class="divider"></div><h2>Código de vestimenta</h2><p>${escapeHtmlInv(data.vestimenta)}</p></section>` : ''}
@@ -287,6 +296,7 @@ function plantillaModerna(data) {
   .detalle-card:last-child { padding-left:26px; }
   .detalle-card h3 { text-transform:uppercase; font-size:0.85rem; letter-spacing:0.1em; margin:0 0 12px; }
   .detalle-card p { margin:4px 0; font-size:0.92rem; }
+  .mapa-embed { width:100%; height:160px; border:0; margin-top:12px; filter:grayscale(1); }
   .itin-list { border-top:1px solid var(--ink); }
   .itin-item { display:flex; gap:20px; padding:14px 0; border-bottom:1px solid var(--ink); text-transform:uppercase; font-size:0.85rem; letter-spacing:0.04em; }
   .itin-hora { color:var(--acento); min-width:80px; font-weight:700; }
@@ -313,8 +323,8 @@ ${data.historia ? `<section class="section"><h2>Nuestra historia</h2>${nl2p(data
 <section class="section">
   <h2>Detalles del evento</h2>
   <div class="detalles">
-    <div class="detalle-card"><h3>Ceremonia</h3><p><strong>Hora</strong> — ${escapeHtmlInv(data.horaCeremonia)}</p><p><strong>Lugar</strong> — ${escapeHtmlInv(data.lugarCeremonia)}</p>${data.direccionCeremonia ? `<p>${escapeHtmlInv(data.direccionCeremonia)}</p>` : ''}${f.mapa && data.mapaCeremonia ? `<p><a href="${escapeHtmlInv(data.mapaCeremonia)}" target="_blank" rel="noopener">Ver mapa →</a></p>` : ''}</div>
-    <div class="detalle-card"><h3>Recepción</h3><p><strong>Hora</strong> — ${escapeHtmlInv(data.horaRecepcion)}</p><p><strong>Lugar</strong> — ${escapeHtmlInv(data.lugarRecepcion)}</p>${data.direccionRecepcion ? `<p>${escapeHtmlInv(data.direccionRecepcion)}</p>` : ''}${f.mapa && data.mapaRecepcion ? `<p><a href="${escapeHtmlInv(data.mapaRecepcion)}" target="_blank" rel="noopener">Ver mapa →</a></p>` : ''}</div>
+    <div class="detalle-card"><h3>Ceremonia</h3><p><strong>Hora</strong> — ${escapeHtmlInv(data.horaCeremonia)}</p><p><strong>Lugar</strong> — ${escapeHtmlInv(data.lugarCeremonia)}</p>${data.direccionCeremonia ? `<p>${escapeHtmlInv(data.direccionCeremonia)}</p>` : ''}${f.mapa && (data.direccionCeremonia || data.lugarCeremonia) ? mapaEmbedHTML(data.direccionCeremonia || data.lugarCeremonia) : ''}${f.mapa && data.mapaCeremonia ? `<p><a href="${escapeHtmlInv(data.mapaCeremonia)}" target="_blank" rel="noopener">Ver mapa completo →</a></p>` : ''}</div>
+    <div class="detalle-card"><h3>Recepción</h3><p><strong>Hora</strong> — ${escapeHtmlInv(data.horaRecepcion)}</p><p><strong>Lugar</strong> — ${escapeHtmlInv(data.lugarRecepcion)}</p>${data.direccionRecepcion ? `<p>${escapeHtmlInv(data.direccionRecepcion)}</p>` : ''}${f.mapa && (data.direccionRecepcion || data.lugarRecepcion) ? mapaEmbedHTML(data.direccionRecepcion || data.lugarRecepcion) : ''}${f.mapa && data.mapaRecepcion ? `<p><a href="${escapeHtmlInv(data.mapaRecepcion)}" target="_blank" rel="noopener">Ver mapa completo →</a></p>` : ''}</div>
   </div>
 </section>
 ${f.vestimenta && data.vestimenta ? `<section class="section"><h2>Código de vestimenta</h2><p>${escapeHtmlInv(data.vestimenta)}</p></section>` : ''}
@@ -360,6 +370,7 @@ function plantillaRomantica(data) {
   .detalle-card { background:var(--blush); border-radius:22px; padding:26px; }
   .detalle-card h3 { font-family:var(--serif); font-style:italic; font-size:1.2rem; margin:0 0 10px; color:var(--acento); }
   .detalle-card p { margin:4px 0; font-size:0.92rem; }
+  .mapa-embed { width:100%; height:150px; border:0; border-radius:16px; margin-top:12px; }
   .itin-list { text-align:left; max-width:420px; margin:0 auto; }
   .itin-item { display:flex; gap:16px; padding:12px 18px; background:var(--blush); border-radius:16px; margin-bottom:8px; }
   .itin-hora { font-family:var(--serif); font-style:italic; color:var(--acento); min-width:66px; }
@@ -386,8 +397,8 @@ ${data.historia ? `<section class="section"><h2>Nuestra historia</h2>${nl2p(data
 <section class="section">
   <h2>Los detalles</h2>
   <div class="detalles">
-    <div class="detalle-card"><h3>Ceremonia</h3><p><strong>Hora:</strong> ${escapeHtmlInv(data.horaCeremonia)}</p><p><strong>Lugar:</strong> ${escapeHtmlInv(data.lugarCeremonia)}</p>${data.direccionCeremonia ? `<p>${escapeHtmlInv(data.direccionCeremonia)}</p>` : ''}${f.mapa && data.mapaCeremonia ? `<p><a href="${escapeHtmlInv(data.mapaCeremonia)}" target="_blank" rel="noopener">Ver mapa →</a></p>` : ''}</div>
-    <div class="detalle-card"><h3>Recepción</h3><p><strong>Hora:</strong> ${escapeHtmlInv(data.horaRecepcion)}</p><p><strong>Lugar:</strong> ${escapeHtmlInv(data.lugarRecepcion)}</p>${data.direccionRecepcion ? `<p>${escapeHtmlInv(data.direccionRecepcion)}</p>` : ''}${f.mapa && data.mapaRecepcion ? `<p><a href="${escapeHtmlInv(data.mapaRecepcion)}" target="_blank" rel="noopener">Ver mapa →</a></p>` : ''}</div>
+    <div class="detalle-card"><h3>Ceremonia</h3><p><strong>Hora:</strong> ${escapeHtmlInv(data.horaCeremonia)}</p><p><strong>Lugar:</strong> ${escapeHtmlInv(data.lugarCeremonia)}</p>${data.direccionCeremonia ? `<p>${escapeHtmlInv(data.direccionCeremonia)}</p>` : ''}${f.mapa && (data.direccionCeremonia || data.lugarCeremonia) ? mapaEmbedHTML(data.direccionCeremonia || data.lugarCeremonia) : ''}${f.mapa && data.mapaCeremonia ? `<p><a href="${escapeHtmlInv(data.mapaCeremonia)}" target="_blank" rel="noopener">Ver mapa completo →</a></p>` : ''}</div>
+    <div class="detalle-card"><h3>Recepción</h3><p><strong>Hora:</strong> ${escapeHtmlInv(data.horaRecepcion)}</p><p><strong>Lugar:</strong> ${escapeHtmlInv(data.lugarRecepcion)}</p>${data.direccionRecepcion ? `<p>${escapeHtmlInv(data.direccionRecepcion)}</p>` : ''}${f.mapa && (data.direccionRecepcion || data.lugarRecepcion) ? mapaEmbedHTML(data.direccionRecepcion || data.lugarRecepcion) : ''}${f.mapa && data.mapaRecepcion ? `<p><a href="${escapeHtmlInv(data.mapaRecepcion)}" target="_blank" rel="noopener">Ver mapa completo →</a></p>` : ''}</div>
   </div>
 </section>
 ${f.vestimenta && data.vestimenta ? `<section class="section"><h2>Código de vestimenta</h2><p>${escapeHtmlInv(data.vestimenta)}</p></section>` : ''}
