@@ -526,14 +526,49 @@
   }
 
   // ---- Form -> datos ----
+  // ---- Tipo de evento (boda / XV años): oculta "Nombre 2" cuando es XV ----
+  function aplicarTipoEvento() {
+    const esXV = document.getElementById('inv-tipo-evento').value === 'xv';
+    document.getElementById('inv-novio2-label').style.display = esXV ? 'none' : '';
+    document.getElementById('inv-novio1-label').firstChild.textContent = esXV ? 'Nombre de la quinceañera' : 'Nombre 1';
+    document.getElementById('inv-novio1').placeholder = esXV ? 'Sofía' : 'Martina';
+    actualizarSlugAutomatico();
+    actualizarPreviewInvitacion();
+  }
+  document.getElementById('inv-tipo-evento').addEventListener('change', aplicarTipoEvento);
+
+  // ---- Slug automático a partir de los nombres (editable a mano) ----
+  let slugEditadoManualmente = false;
+  document.getElementById('inv-slug').addEventListener('input', () => { slugEditadoManualmente = true; });
+
+  function generarSlug() {
+    const esXV = document.getElementById('inv-tipo-evento').value === 'xv';
+    const n1 = document.getElementById('inv-novio1').value.trim();
+    const n2 = document.getElementById('inv-novio2').value.trim();
+    const base = esXV ? `xv-${n1}` : `boda-${n1}-${n2}`;
+    return base.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  function actualizarSlugAutomatico() {
+    if (slugEditadoManualmente) return;
+    document.getElementById('inv-slug').value = generarSlug();
+  }
+  document.getElementById('inv-novio1').addEventListener('input', actualizarSlugAutomatico);
+  document.getElementById('inv-novio2').addEventListener('input', actualizarSlugAutomatico);
+
   function leerFormInvitacion() {
     return {
+      tipoEvento: document.getElementById('inv-tipo-evento').value,
       novio1: document.getElementById('inv-novio1').value.trim() || 'Novia',
       novio2: document.getElementById('inv-novio2').value.trim() || 'Novio',
       plantilla: document.getElementById('inv-plantilla').value,
       acento: document.getElementById('inv-acento').value,
       plan: planActual,
       features: leerFeatures(),
+      slug: document.getElementById('inv-slug').value.trim(),
+      linkPublicado: document.getElementById('inv-link-publicado').value.trim(),
       fotoPortada: invFotoPortada,
       galeriaFotos: invGaleriaFotos.slice(),
       itinerario: invItinerario.slice(),
@@ -574,11 +609,8 @@
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    const slug = (datos.novio1 + '-' + datos.novio2).toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     a.href = url;
-    a.download = `invitacion-${slug || 'boda'}.html`;
+    a.download = `${datos.slug || generarSlug() || 'invitacion'}.html`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -604,10 +636,15 @@
     const r = invitaciones.find((x) => x.id === id);
     if (!r) return;
     const d = r.datos;
+    document.getElementById('inv-tipo-evento').value = d.tipoEvento || 'boda';
     document.getElementById('inv-novio1').value = d.novio1 || '';
     document.getElementById('inv-novio2').value = d.novio2 || '';
     document.getElementById('inv-plantilla').value = d.plantilla || 'clasica';
     document.getElementById('inv-acento').value = d.acento || 'dorado';
+    slugEditadoManualmente = true; // al cargar, respetamos el slug guardado tal cual
+    document.getElementById('inv-slug').value = d.slug || '';
+    document.getElementById('inv-link-publicado').value = d.linkPublicado || '';
+    aplicarTipoEvento();
     document.getElementById('inv-fecha').value = d.fecha || '';
     document.getElementById('inv-hora-ceremonia').value = d.horaCeremonia || '';
     document.getElementById('inv-lugar-ceremonia').value = d.lugarCeremonia || '';
@@ -665,9 +702,12 @@
       const usuarioAsignado = usuarios.find((u) => u.id === r.asignadoUsuarioId);
       const nombrePlantilla = (window.LUA_INVITACION_TEMPLATES[r.datos.plantilla] || {}).label || 'Clásica';
       const nombrePlan = (window.LUA_PLANES[r.datos.plan] || {}).label || '—';
+      const esXV = r.datos.tipoEvento === 'xv';
+      const nombreMostrado = esXV ? escapeHtml(r.datos.novio1) : `${escapeHtml(r.datos.novio1)} &amp; ${escapeHtml(r.datos.novio2)}`;
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${escapeHtml(r.datos.novio1)} &amp; ${escapeHtml(r.datos.novio2)}</td>
+        <td>${nombreMostrado}</td>
+        <td>${esXV ? 'XV años' : 'Boda'}</td>
         <td>${escapeHtml(r.datos.fecha || '—')}</td>
         <td>${escapeHtml(nombrePlantilla)}</td>
         <td>${escapeHtml(nombrePlan)}</td>

@@ -146,8 +146,10 @@ function mostrarGaleria(usuario) {
   const invitacion = invitaciones.find((i) => i.asignadoUsuarioId === usuario.id);
   const box = document.getElementById('invitacion-box');
   if (invitacion) {
-    document.getElementById('invitacion-titulo').textContent =
-      `${invitacion.datos.novio1} & ${invitacion.datos.novio2}`;
+    const esXV = invitacion.datos.tipoEvento === 'xv';
+    document.getElementById('invitacion-titulo').textContent = esXV
+      ? invitacion.datos.novio1
+      : `${invitacion.datos.novio1} & ${invitacion.datos.novio2}`;
     box.hidden = false;
     box.dataset.invitacionId = invitacion.id;
   } else {
@@ -159,7 +161,14 @@ function abrirInvitacion() {
   const invitaciones = leerJSON(INVITACIONES_KEY, []);
   const box = document.getElementById('invitacion-box');
   const invitacion = invitaciones.find((i) => i.id === box.dataset.invitacionId);
-  if (!invitacion || !window.LUA_INVITACION_TEMPLATES) return;
+  if (!invitacion) return;
+  // Si ya está publicada de verdad, abrimos esa URL prolija. Si no, generamos
+  // una vista previa temporal (link "blob" feo, solo para probar el diseño).
+  if (invitacion.datos.linkPublicado) {
+    window.open(invitacion.datos.linkPublicado, '_blank');
+    return;
+  }
+  if (!window.LUA_INVITACION_TEMPLATES) return;
   const plantilla = window.LUA_INVITACION_TEMPLATES[invitacion.datos.plantilla] || window.LUA_INVITACION_TEMPLATES.clasica;
   const html = plantilla.generar(invitacion.datos);
   const blob = new Blob([html], { type: 'text/html' });

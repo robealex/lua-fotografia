@@ -212,11 +212,17 @@
       <div class="invite-form">
 
         <div class="admin-card">
-          <h3>La pareja</h3>
-          <label>Nombre 1
+          <h3>La pareja / festejada</h3>
+          <label>Tipo de evento
+            <select id="inv-tipo-evento">
+              <option value="boda">Boda</option>
+              <option value="xv">XV años</option>
+            </select>
+          </label>
+          <label id="inv-novio1-label">Nombre 1
             <input type="text" id="inv-novio1" placeholder="Martina">
           </label>
-          <label>Nombre 2
+          <label id="inv-novio2-label">Nombre 2
             <input type="text" id="inv-novio2" placeholder="Fede">
           </label>
           <label>Diseño
@@ -240,6 +246,18 @@
             </select>
           </label>
           <p class="builder-sub" style="margin-top:-6px;">Al asignarla, ese usuario va a ver un botón "Tu invitación" cuando entre a su cuenta (en este mismo navegador).</p>
+        </div>
+
+        <div class="admin-card">
+          <h3>Link de la invitación</h3>
+          <label>URL amigable (slug)
+            <input type="text" id="inv-slug" placeholder="boda-martina-fede">
+          </label>
+          <p class="builder-sub" style="margin-top:-6px;">Se arma solo a partir de los nombres, pero podés editarlo.</p>
+          <label>Link ya publicado (opcional)
+            <input type="url" id="inv-link-publicado" placeholder="https://lua-fotografia.vercel.app/invitaciones/boda-martina-fede.html">
+          </label>
+          <p class="builder-sub" style="margin-top:-6px;">Vacío: "Ver mi invitación" abre una vista previa temporal con un link feo (blob). Pedime en el chat que la publique de verdad — la subo al sitio con esa URL prolija y la pegás acá.</p>
         </div>
 
         <div class="admin-card">
@@ -368,7 +386,7 @@
     <div class="admin-card invite-history">
       <h3>Invitaciones guardadas</h3>
       <table class="admin-table">
-        <thead><tr><th>Pareja</th><th>Fecha</th><th>Diseño</th><th>Plan</th><th>Asignada a</th><th></th></tr></thead>
+        <thead><tr><th>Nombre</th><th>Tipo</th><th>Fecha</th><th>Diseño</th><th>Plan</th><th>Asignada a</th><th></th></tr></thead>
         <tbody id="admin-invitaciones-body"></tbody>
       </table>
       <p class="admin-empty" id="admin-invitaciones-empty">Todavía no guardaste ninguna invitación.</p>

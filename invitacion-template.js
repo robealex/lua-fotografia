@@ -41,7 +41,23 @@ function prepararContexto(data) {
     fechaISOConHora: data.fecha ? `${data.fecha}T${data.horaCeremonia || '00:00'}:00` : '',
     mailtoRSVP: data.emailRSVP || 'hola@luafotografia.com',
     f: data.features || {},
+    esXV: data.tipoEvento === 'xv',
   };
+}
+
+// ============================== NOMBRES: BODA vs XV AÑOS ==============================
+// Boda: "Novio1 & Novio2". XV años: solo el nombre de la quinceañera.
+function heroKicker(data) {
+  return data.tipoEvento === 'xv' ? 'Mis XV años' : 'Nos casamos';
+}
+function nombresHTML(data, amperMarkup, separador) {
+  if (data.tipoEvento === 'xv') return escapeHtmlInv(data.novio1);
+  return `${escapeHtmlInv(data.novio1)}${separador}${amperMarkup} ${escapeHtmlInv(data.novio2)}`;
+}
+function nombresPlano(data) {
+  return data.tipoEvento === 'xv'
+    ? escapeHtmlInv(data.novio1)
+    : `${escapeHtmlInv(data.novio1)} &amp; ${escapeHtmlInv(data.novio2)}`;
 }
 
 // ============================== BLOQUES COMPARTIDOS ==============================
@@ -125,6 +141,7 @@ function scriptComunInvitacion(fechaISOConHora, mailtoRSVP) {
 }
 
 function rsvpFormHTML(data, fechaLarga) {
+  const destinatario = data.tipoEvento === 'xv' ? escapeHtmlInv(data.novio1) : 'los novios';
   return `
     <p>Antes del ${escapeHtmlInv(data.fechaLimiteRSVP || fechaLarga)}, contanos si venís.</p>
     <form class="rsvp-form" onsubmit="return enviarRSVP(event)">
@@ -137,7 +154,7 @@ function rsvpFormHTML(data, fechaLarga) {
       </label>
       <label>Número de acompañantes<input type="number" id="rsvp-acompanantes" min="0" value="0"></label>
       <label>Restricciones alimentarias<input type="text" id="rsvp-restricciones"></label>
-      <label>Mensaje para los novios<textarea id="rsvp-mensaje" rows="3"></textarea></label>
+      <label>Mensaje para ${destinatario}<textarea id="rsvp-mensaje" rows="3"></textarea></label>
       <button type="submit">Enviar confirmación</button>
     </form>`;
 }
@@ -166,7 +183,7 @@ function plantillaClasica(data) {
   return `<!DOCTYPE html>
 <html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escapeHtmlInv(data.novio1)} &amp; ${escapeHtmlInv(data.novio2)}</title>
+<title>${nombresPlano(data)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -209,8 +226,8 @@ function plantillaClasica(data) {
 </style></head><body>
 ${musicaHTML(f.musica ? data.musicaUrl : '')}
 <section class="hero">
-  <p class="hero-kicker">Nos casamos</p>
-  <h1 class="hero-names">${escapeHtmlInv(data.novio1)} <span class="hero-amp">&amp;</span> ${escapeHtmlInv(data.novio2)}</h1>
+  <p class="hero-kicker">${heroKicker(data)}</p>
+  <h1 class="hero-names">${nombresHTML(data, '<span class="hero-amp">&amp;</span>', ' ')}</h1>
   ${fotoPortada}
   <p class="hero-fecha">${fechaLarga}</p>
   <div class="countdown" id="countdown"></div>
@@ -228,7 +245,7 @@ ${f.vestimenta && data.vestimenta ? `<section class="section"><div class="divide
 ${f.regalos && data.regalos ? `<section class="section"><div class="divider"></div><h2>Mesa de regalos</h2>${nl2p(data.regalos)}</section>` : ''}
 ${seccionesExtra(data, f)}
 ${f.rsvp !== false ? `<section class="section"><div class="divider"></div><h2>Confirma tu asistencia</h2>${rsvpFormHTML(data, fechaLarga)}</section>` : ''}
-<footer>${escapeHtmlInv(data.novio1)} &amp; ${escapeHtmlInv(data.novio2)} · Fotografía por Lua Fotografía</footer>
+<footer>${nombresPlano(data)} · Fotografía por Lua Fotografía</footer>
 ${scriptComunInvitacion(fechaISOConHora, mailtoRSVP)}
 </body></html>`;
 }
@@ -241,7 +258,7 @@ function plantillaModerna(data) {
   return `<!DOCTYPE html>
 <html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escapeHtmlInv(data.novio1)} &amp; ${escapeHtmlInv(data.novio2)}</title>
+<title>${nombresPlano(data)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -285,8 +302,8 @@ function plantillaModerna(data) {
 </style></head><body>
 ${musicaHTML(f.musica ? data.musicaUrl : '')}
 <section class="hero">
-  <p class="hero-kicker">Nos casamos</p>
-  <h1 class="hero-names">${escapeHtmlInv(data.novio1)}<br><span class="hero-amp">&amp;</span> ${escapeHtmlInv(data.novio2)}</h1>
+  <p class="hero-kicker">${heroKicker(data)}</p>
+  <h1 class="hero-names">${nombresHTML(data, '<span class="hero-amp">&amp;</span>', '<br>')}</h1>
   <p class="hero-fecha">${fechaLarga}</p>
   <div class="countdown" id="countdown"></div>
   ${f.hashtag ? hashtagHTML(data.hashtag) : ''}
@@ -304,7 +321,7 @@ ${f.vestimenta && data.vestimenta ? `<section class="section"><h2>Código de ves
 ${f.regalos && data.regalos ? `<section class="section"><h2>Mesa de regalos</h2>${nl2p(data.regalos)}</section>` : ''}
 ${seccionesExtra(data, f)}
 ${f.rsvp !== false ? `<section class="section"><h2>Confirma tu asistencia</h2>${rsvpFormHTML(data, fechaLarga)}</section>` : ''}
-<footer>${escapeHtmlInv(data.novio1)} &amp; ${escapeHtmlInv(data.novio2)} — Fotografía por Lua Fotografía</footer>
+<footer>${nombresPlano(data)} — Fotografía por Lua Fotografía</footer>
 ${scriptComunInvitacion(fechaISOConHora, mailtoRSVP)}
 </body></html>`;
 }
@@ -317,7 +334,7 @@ function plantillaRomantica(data) {
   return `<!DOCTYPE html>
 <html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escapeHtmlInv(data.novio1)} &amp; ${escapeHtmlInv(data.novio2)}</title>
+<title>${nombresPlano(data)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,450&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -360,7 +377,7 @@ ${musicaHTML(f.musica ? data.musicaUrl : '')}
 <section class="hero">
   <p class="hero-deco">❦</p>
   ${fotoPortada}
-  <h1 class="hero-names">${escapeHtmlInv(data.novio1)} &amp; ${escapeHtmlInv(data.novio2)}</h1>
+  <h1 class="hero-names">${nombresHTML(data, '&amp;', ' ')}</h1>
   <p class="hero-fecha">${fechaLarga}</p>
   <div class="countdown" id="countdown"></div>
   ${f.hashtag ? hashtagHTML(data.hashtag) : ''}
@@ -377,7 +394,7 @@ ${f.vestimenta && data.vestimenta ? `<section class="section"><h2>Código de ves
 ${f.regalos && data.regalos ? `<section class="section"><h2>Mesa de regalos</h2>${nl2p(data.regalos)}</section>` : ''}
 ${seccionesExtra(data, f)}
 ${f.rsvp !== false ? `<section class="section"><h2>Confirma tu asistencia</h2>${rsvpFormHTML(data, fechaLarga)}</section>` : ''}
-<footer>${escapeHtmlInv(data.novio1)} &amp; ${escapeHtmlInv(data.novio2)} · Fotografía por Lua Fotografía</footer>
+<footer>${nombresPlano(data)} · Fotografía por Lua Fotografía</footer>
 ${scriptComunInvitacion(fechaISOConHora, mailtoRSVP)}
 </body></html>`;
 }
